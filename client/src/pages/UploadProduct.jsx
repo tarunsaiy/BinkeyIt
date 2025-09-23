@@ -7,6 +7,11 @@ import OpenImage from '../Components/OpenImage'
 import { MdDelete } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import { IoClose } from 'react-icons/io5'
+import AddField from '../Components/AddField'
+import Axios from '../utils/axios'
+import SummaryApi from '../common/summaryApi'
+import toast from "react-hot-toast";
+import  AxiosToastError from '../utils/AxiosToastError.js'
 const UploadProduct = () => {
     const allCategory = useSelector((state) => state.product.allCategory)
     const [data, setData] = useState({
@@ -21,13 +26,14 @@ const UploadProduct = () => {
         discount: "",
         more_details: {}
     })
-    console.log(data.selectSubCategory)
+    
     const [imageLoading, setImageLoading] = useState(false)
     const [viewImageURL, setViewImageURL] = useState('')
     const [selectCategory, setSelectCategory] = useState('')
     const [selectSubCategory, setSelectSubCategory] = useState('')
     const allSubCategory = useSelector((state) => state.product.subCategory)
-    const [morefields, setMoreFields] = useState([])
+    const [openAddFields, setOpenAddFields] = useState(false)
+    const [fieldName, setFieldName] = useState('')
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData(prev => {
@@ -59,7 +65,7 @@ const UploadProduct = () => {
             }
         })
     }
-    const handleDeleteCategory = async(ind) => {
+    const handleDeleteCategory = async (ind) => {
         data.category.splice(ind, 1)
         setData(prev => {
             return {
@@ -67,7 +73,7 @@ const UploadProduct = () => {
             }
         })
     }
-    const handleDeleteSubCategory = async(ind) => {
+    const handleDeleteSubCategory = async (ind) => {
         data.subCategory.splice(ind, 1)
         setData(prev => {
             return {
@@ -76,19 +82,66 @@ const UploadProduct = () => {
             }
         })
     }
+    const handleAddField = () => {
+        setData((prev) => {
+            return {
+                ...prev,
+                more_details: {
+                    ...prev.more_details,
+                    [fieldName]: ""
+                }
+            }
+        })
+        setFieldName('')
+        setOpenAddFields(false)
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await Axios({
+                ...SummaryApi.createProduct,
+                data : data
+            })
+            if (response.data.error) {
+                toast.error(response.data.message);
+            }
+            if (response.data.success) {
+                toast.success(response.data.message);
+                setData({
+                    name: "",
+                    image: [],
+                    category: [],
+                    subCategory: [],
+                    unit: "",
+                    stock: "",
+                    price: "",
+                    description: "",
+                    discount: "",
+                    more_details: {}
+                });
+                
+            }
+        }
+        catch (error) {
+            AxiosToastError(error);
+        }
+
+    }
+   
     return (
         <section>
             <div className='p-2 bg-white shadow-md flex items-center justify-between'>
                 <h2 className="font-semibold ">Upload Product</h2>
             </div>
             <div className='grid p-3 '>
-                <form className='grid gap-3 '>
+                <form className='grid gap-3 ' onSubmit={handleSubmit}>
                     <div className='grid gap-1'>
                         <label htmlFor="name">Name</label>
                         <input type="text"
                             placeholder='Enter product name'
                             value={data.name}
                             name='name'
+                            id='name'
                             onChange={handleChange}
                             required
                             className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
@@ -213,16 +266,16 @@ const UploadProduct = () => {
                                 onChange={(e) => {
                                     const value = e.target.value;
                                     const subCategorydetails = allSubCategory.find(cat => cat?._id === value)
-                                    
+
                                     setData(prev => {
                                         if (!prev.subCategory.some(sc => sc._id === subCategorydetails._id)) {
                                             return {
-                                            ...prev,
-                                            subCategory: [...prev.subCategory, subCategorydetails]
-                                        }
+                                                ...prev,
+                                                subCategory: [...prev.subCategory, subCategorydetails]
+                                            }
                                         }
                                         return prev
-                                        
+
                                     })
                                     setSelectSubCategory('')
                                 }}>
@@ -274,10 +327,11 @@ const UploadProduct = () => {
                     </div>
                     <div className='grid gap-1'>
                         <label htmlFor="unit">Unit</label>
-                        <input type="number"
+                        <input type="text"
                             placeholder='Enter product unit'
                             value={data.unit}
                             name='unit'
+                            id='unit'
                             onChange={handleChange}
                             required
                             min={1}
@@ -289,14 +343,16 @@ const UploadProduct = () => {
                             placeholder='Enter number of stock'
                             value={data.stock}
                             name='stock'
+                            id='stock'
                             onChange={handleChange}
                             required
                             min={1}
                             className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
                     </div>
                     <div className='grid gap-1'>
-                        <label htmlFor="name">Price</label>
+                        <label htmlFor="price">Price</label>
                         <input type="text"
+                            id='price'
                             placeholder='Enter product price'
                             value={data.price}
                             name='price'
@@ -306,26 +362,70 @@ const UploadProduct = () => {
                             className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
                     </div>
                     <div className='grid gap-1'>
-                        <label htmlFor="name">Discount</label>
+                        <label htmlFor="discount">Discount</label>
                         <input type="text"
                             placeholder='Enter product discount'
                             value={data.discount}
                             name='discount'
+                            id='discount'
                             min={0}
                             onChange={handleChange}
-                            required
+                           
                             className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
                     </div>
-                    <div className='flex items-center gap-2 w-max justify-center bg-yellow-400 py-1 px-2 rounded cursor-pointer'>
+
+                    <div>
+                        {
+                            Object.keys(data?.more_details)?.map((k, ind) => {
+                                return (
+                                    <div className='grid gap-1' key={k+ ind + "more_details"}>
+                                        <label htmlFor="k">{k}</label>
+                                        <input type="text"
+                                            
+                                            value={data?.more_details[k]}
+
+                                            id={k}
+                                            onChange={(e) => {
+                                                setData((prev) => {
+                                                    return {
+                                                        ...prev,
+                                                        more_details: {
+                                                            ...prev.more_details,
+                                                            [k]: e.target.value
+                                                        }
+                                                    }
+                                                })
+                                            }}
+                                            required
+                                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+
+                    <div onClick={() => setOpenAddFields(true)} className='flex items-center text-sm gap-0.5 font-semibold text-green-600 w-max justify-center  cursor-pointer'>
                         <FaPlus size={12} />
                         Add Fields
                     </div>
+
+                    <button type='submit' className='bg-amber-400 py-1 px-2 rounded mt-3'>Upload</button>
                 </form>
             </div>
             {
                 viewImageURL && (
 
                     <OpenImage url={viewImageURL} close={() => setViewImageURL('')} />
+                )
+            }
+            {
+                openAddFields && (
+                    <AddField
+                        close={() => setOpenAddFields(false)}
+                        onChange={(e) => setFieldName(e.target.value)}
+                        onClick={handleAddField}
+                        value={fieldName}
+                    />
                 )
             }
         </section>

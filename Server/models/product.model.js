@@ -41,9 +41,9 @@ const productSchema = new mongoose.Schema({
         default: ""
     },
     more_details : {
-        type: [],
-        default: ""
-    }
+        type : Object,
+        default : {}
+    },
     publish : {
         type: Boolean,
         default: true

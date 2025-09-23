@@ -5,7 +5,7 @@ const Home = () => {
     
   }, []);
   return (
-    <div>
+    <div >
       Home wrbrbrb2b22rbr  2 3  r
     </div>
   )

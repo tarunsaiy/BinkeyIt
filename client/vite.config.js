@@ -6,4 +6,7 @@ export default defineConfig({
   plugins: [
     react()
     , tailwindcss()],
+    fontFamily: {
+        'zalando-expanded': ['"Zalando Sans Expanded"', 'sans-serif'],
+      },
 })

@@ -100,12 +100,12 @@ const OtpVerification = () => {
           </button>
         </form>
 
-        <p className="text-center mt-4">
+        <p className="text-center mt-4 px-2 cursor-pointer">
           Already have an account?
           <Link
             to={"/login"}
-            className="font-bold text-green-700 hover:text-green-600"
-          ></Link>
+            className="font-bold text-green-700 hover:text-green-600 pl-2"
+          >Login</Link>
         </p>
       </div>
     </section>

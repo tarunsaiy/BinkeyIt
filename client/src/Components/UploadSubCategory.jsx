@@ -13,6 +13,7 @@ const UploadSubCategory = ({ close, fetchData }) => {
     image: "",
     category: []
   })
+  console.log(subCategoryData.category)
   const allCategory = useSelector(state => state.product.allCategory);
 
   const [loading, setLoading] = useState(false);

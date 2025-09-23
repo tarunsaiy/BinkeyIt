@@ -97,12 +97,12 @@ const Header = () => {
               ) : (
                 <button
                   onClick={redirectLoginPage}
-                  className="font-semibold h-[40px] px-5 cursor-pointer text-green-800  rounded bg-amber-200"
+                  className="font-semibold h-[40px] px-5 cursor-pointer text-red-50  rounded bg-red-600 hover:bg-red-700"
                 >
                   Login
                 </button>
               )}
-              <button className="flex h-[40px] items-center gap-2 bg-green-800 px-4 py-3 rounded text-white hover:bg-green-600">
+              <button className="flex h-[40px] items-center font-semibold gap-1.5 bg-red-600 px-4 py-3 rounded text-red-50 hover:bg-red-700">
                 {/* add to cart */}
                 <div className="animate-pulse">
                   <FaCartShopping size={20} />

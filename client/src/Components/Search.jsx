@@ -21,13 +21,13 @@ const Search = () => {
   };
 
   return (
-    <div className="w-full min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border border-gray-300 overflow-hidden flex items-center text-neutral-500 bg-gray-100 group focus-within:border-amber-400">
+    <div className="w-full min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border border-gray-300 overflow-hidden flex items-center text-neutral-500 bg-gray-100 group ">
       {isMobile && isSearchPage ? (
-        <Link to={"/"} className="flex justify-center items-center h-full p-2 m-1 group-focus-within:text-amber-400 bg-white ">
+        <Link to={"/"} className="flex justify-center items-center h-full p-2 m-1 ">
           <FaArrowLeft size={20} />
         </Link>
       ) : (
-        <button className="flex justify-center items-center h-full p-3 group-focus-within:text-amber-400">
+        <button className="flex justify-center items-center h-full p-3 ">
           <IoSearch size={22} />
         </button>
       )}

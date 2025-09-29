@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa6";
 import toast from "react-hot-toast";
-import axios from "axios";
 import Axios from "../utils/axios";
 import SummaryApi from "../common/summaryApi";
 import AxiosToastError from "../utils/AxiosToastError";

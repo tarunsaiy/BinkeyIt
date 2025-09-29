@@ -1,0 +1,67 @@
+import React, { useEffect, useRef, useState } from 'react'
+import { Link } from'react-router-dom'
+import AxiosToastError from '../utils/AxiosToastError'
+import Axios from '../utils/axios'
+import SummaryApi from '../common/summaryApi'
+import CardLoading from './CardLoading'
+import ProductCardAdmin from './ProductCardAdmin'
+import CardProduct from './CardProduct'
+const CategoryWiseProductDisplay = ({id, name}) => {
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
+    const containerRef = useRef()
+    // for scrolling
+    // const handleScroll = () => {
+        // containerRef.current.scrollLeft += 10
+    // }
+    const fetchCategoryWiseProducts = async () => {
+        try {
+            setLoading(true)
+            const response = await Axios({
+                ...SummaryApi.getProductByCategory,
+                data : {
+                    id : id
+                }
+            })
+            const {data : responseData} = response
+            if (responseData.success) {
+                setData(responseData.data)
+            }
+        } catch (error) {
+            AxiosToastError(error)
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+    useEffect(() => {
+        fetchCategoryWiseProducts()
+    }, [])
+    const loadingCardNumber = new Array(6).fill(null)
+  return (
+    <div>
+        <div className='container mx-auto p-4 flex items-center justify-between gap-4'>
+          <h3 className='font-semibold'>{name}</h3>
+          <Link to="" className="text-green-600">See All</Link>
+        </div>
+        <div className='flex items-center gap-4 md:gap-6 lg:gap-10 overflow-x-auto p-4  mx-auto' ref={containerRef}>
+            {
+                loading && loadingCardNumber.map((_, ind) => {
+                    return (
+                        <CardLoading key={ind} />
+                    )
+                })
+            }
+            {
+                data.map((p, ind) => {
+                    return (
+                        <CardProduct key={ind} data={p}/>
+                    )
+                })
+            }
+        </div>
+      </div>
+  )
+}
+
+export default CategoryWiseProductDisplay

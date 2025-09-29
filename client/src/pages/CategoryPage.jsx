@@ -27,7 +27,7 @@ const CategoryPage = () => {
     const allCategory = useSelector(state => state.product.allCategory);
     useEffect(() => {
         setCategoryData(allCategory)
-    }, [allCategory])
+    }, [])
 
     const fetchCategory = async () => {
         // to load all the categorys
@@ -47,10 +47,6 @@ const CategoryPage = () => {
             setLoading(false);
         }
     }
-    // useEffect(() => {
-    //     // on loading load all the categorys
-    //     fetchCategory();
-    // }, [])
 
     
     const handleDelete = async() => {

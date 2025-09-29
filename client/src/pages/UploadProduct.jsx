@@ -11,7 +11,9 @@ import AddField from '../Components/AddField'
 import Axios from '../utils/axios'
 import SummaryApi from '../common/summaryApi'
 import toast from "react-hot-toast";
+import successSound from '../assets/success-sound.mp3';
 import  AxiosToastError from '../utils/AxiosToastError.js'
+import playSound from '../utils/playsound.js'
 const UploadProduct = () => {
     const allCategory = useSelector((state) => state.product.allCategory)
     const [data, setData] = useState({
@@ -107,6 +109,7 @@ const UploadProduct = () => {
             }
             if (response.data.success) {
                 toast.success(response.data.message);
+                playSound(successSound)
                 setData({
                     name: "",
                     image: [],

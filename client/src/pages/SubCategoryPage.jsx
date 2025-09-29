@@ -30,7 +30,7 @@ const SubCategoryPage = () => {
 
   // pagination
   const [page, setPage] = useState(1);
-  const [limit] = useState(5);
+  const [limit] = useState(15);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchSubCategory = async () => {

@@ -1,16 +1,11 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100..900&display=swap"); */
 
+/* Optional custom font utility */
 
-
-.sora-regular {
-  font-family: "Sora", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;  /* Medium */
-  font-style: normal;
-}
 
 body {
-  font-family: "Sora", sans-serif;
+  font-family: "Poppins";
+  font-weight: 600;
   font-size: 14px;
 }

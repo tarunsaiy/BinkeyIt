@@ -30,7 +30,7 @@ export const GetSubCategory = async (request, response) => {
     try {
         const {page, limit} = request.query
         const total = await SubCategoryModel.countDocuments();
-        const data = await SubCategoryModel.find().populate('category').skip((page - 1) * limit).limit(parseInt(limit));
+        const data = await SubCategoryModel.find().populate('category').sort({ name: 1 }).skip((page - 1) * limit).limit(parseInt(limit));
         return response.status(200).json({
             message: "SubCategory fetched successfully",
             data : data,

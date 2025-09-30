@@ -85,7 +85,7 @@ const ProductAdmin = () => {
             {
               productData.map((prod, ind) => {
                 return (
-                  <ProductCardAdmin data={prod} key={ind} />
+                  <ProductCardAdmin data={prod} key={ind} fetchProductData={fetchProductData} />
                 )
               })
             }

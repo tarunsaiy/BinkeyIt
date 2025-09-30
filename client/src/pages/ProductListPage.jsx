@@ -102,7 +102,7 @@ const ProductListPage = () => {
           <div>
 
            <div className='min-h-[80vh] max-h-[80vh] overflow-y-auto relative'>
-            <div className=' grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4 '>
+            <div className=' grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4  w-full mx-auto'>
                 {
                   data.map((p, index) => {
                     return (

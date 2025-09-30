@@ -63,7 +63,7 @@ export const getProduct = async (request, response) => {
             }
         } : {};
         const total = await Product.countDocuments(query);
-        const data = await Product.find(query).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(parseInt(limit));
+        const data = await Product.find(query).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(parseInt(limit)).populate('category').populate('subCategory');
         return response.status(200).json({
             message: "Product fetched successfully",
             data: data,
@@ -194,5 +194,62 @@ export const getProductDetails = async (request, response) => {
                 error: true
             }
         );
+    }
+}
+
+export const updateProduct = async (request, response) => {
+    try {
+        const { _id } = request.body;
+        if (!_id) {    
+            return response.status(400).json(
+                {
+                    message: "Please provide product id",
+                    success: false,
+                    error: true
+                }
+            );
+        }
+        const updatedProduct = await Product.updateOne({ _id: _id }, {...request.body});
+        return response.status(200).json({
+            message: "Product updated successfully",
+            data: updatedProduct,
+            error: false,
+            success: true
+            }
+        );
+    } catch (error) {
+        return response.status(500).json(
+            {
+                message: error.message,
+                success: false,
+                error: true
+            }
+        );
+    }
+}
+export const deleteProduct = async(request,response)=>{
+    try {
+        const { _id } = request.body 
+
+        if(!_id){
+            return response.status(400).json({
+                message : "provide _id ",
+                error : true,
+                success : false
+            })
+        }
+        const deleteProduct = await ProductModel.findByIdAndDelete(_id)
+        return response.json({
+            message : "Delete successfully",
+            error : false,
+            success : true,
+            data : deleteProduct
+        })
+    } catch (error) {
+        return response.status(500).json({
+            message : error.message || error,
+            error : true,
+            success : false
+        })
     }
 }

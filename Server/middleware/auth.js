@@ -25,7 +25,7 @@ const auth = async (request, response, next) => {
     } catch (error) {
         console.log("Auth middleware error:");
         return response.status(401).json({
-            message: error.message || error,
+            message: "Login session expired, please login again",
             error: true,
             success: false
         });

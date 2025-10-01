@@ -14,119 +14,133 @@ export const GlobalContext = createContext(null)
 export const useGlobalContext = () => useContext(GlobalContext)
 
 const GlobalProvider = ({ children }) => {
-    const dispatch = useDispatch()
-    const [totalQuantity, setTotalQuantity] = useState(0);
-    const cartItem = useSelector(state => state.cartItem?.cart)
-    const user = useSelector(state => state?.user)
+  const dispatch = useDispatch()
+  const [totalQuantity, setTotalQuantity] = useState(0);
+  const cartItem = useSelector(state => state.cartItem?.cart)
+  const user = useSelector(state => state?.user)
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [notDiscountTotalPrice, setNotDiscountTotalPrice] = useState(0)
+  const fetchCartItem = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.getCartItem
+      })
+      const { data: responseData } = response
 
-    const fetchCartItem = async () => {
-        try {
-            const response = await Axios({
-                ...SummaryApi.getCartItem
-            })
-            const { data: responseData } = response
+      if (responseData.success) {
+        dispatch(handleAddItemCart(responseData.data))
+      }
 
-            if (responseData.success) {
-                dispatch(handleAddItemCart(responseData.data))
-            }
-
-        } catch (error) {
-            console.log(error)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const updateCartItem = async (id, qty) => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.updateCartItemQty,
+        data: {
+          _id: id,
+          qty: qty
         }
-    }
-    const updateCartItem = async(id,qty)=>{
-      try {
-          const response = await Axios({
-            ...SummaryApi.updateCartItemQty,
-            data : {
-              _id : id,
-              qty : qty
-            }
-          })
-          const { data : responseData } = response
+      })
+      const { data: responseData } = response
 
-          if(responseData.success){
-              fetchCartItem()
-              return responseData
-          }
-      } catch (error) {
-        AxiosToastError(error)
-        return error
-      }
-    }
-    const deleteCartItem = async(cartId)=>{
-      try {
-          const response = await Axios({
-            ...SummaryApi.deleteCartItem,
-            data : {
-              _id : cartId
-            }
-          })
-          const { data : responseData} = response
-
-          if(responseData.success){
-            toast.success(responseData.message)
-            fetchCartItem()
-          }
-      } catch (error) {
-         AxiosToastError(error)
-      }
-    }
-
-    useEffect(() => {
-        const totalQty = cartItem?.reduce((prev, curr) => prev + curr.quantity, 0);
-        setTotalQuantity(totalQty);
-    }, [cartItem])
-
-    // const handleLogoutOut = () => {
-    //     localStorage.clear()
-    //     dispatch(handleAddItemCart([]))
-    // }
-
-    // const fetchAddress = async () => {
-    //     try {
-    //         const response = await Axios({
-    //             ...SummaryApi.getAddress
-    //         })
-    //         const { data: responseData } = response
-
-    //         if (responseData.success) {
-    //             dispatch(handleAddAddress(responseData.data))
-    //         }
-    //     } catch (error) {
-    //         // AxiosToastError(error)
-    //     }
-    // }
-    // const fetchOrder = async () => {
-    //     try {
-    //         const response = await Axios({
-    //             ...SummaryApi.getOrderItems,
-    //         })
-    //         const { data: responseData } = response
-
-    //         if (responseData.success) {
-    //             dispatch(setOrder(responseData.data))
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
-    useEffect(() => {
+      if (responseData.success) {
         fetchCartItem()
-    }, [user])
+        return responseData
+      }
+    } catch (error) {
+      AxiosToastError(error)
+      return error
+    }
+  }
+  const deleteCartItem = async (cartId) => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.deleteCartItem,
+        data: {
+          _id: cartId
+        }
+      })
+      const { data: responseData } = response
 
-    return (
-        <GlobalContext.Provider value={{
-            fetchCartItem,
-            updateCartItem,
-            deleteCartItem,
-           
+      if (responseData.success) {
+        toast.success(responseData.message)
+        fetchCartItem()
+      }
+    } catch (error) {
+      AxiosToastError(error)
+    }
+  }
 
-        }}>
-            {children}
-        </GlobalContext.Provider>
-    )
+  useEffect(() => {
+    const totalQty = cartItem?.reduce((prev, curr) => prev + curr.quantity, 0);
+    setTotalQuantity(totalQty);
+    const tPrice = cartItem.reduce((preve, curr) => {
+      const priceAfterDiscount = pricewithDiscount(curr?.productId?.price, curr?.productId?.discount)
+
+      return preve + (priceAfterDiscount * curr.quantity)
+    }, 0)
+    setTotalPrice(tPrice)
+
+    const notDiscountPrice = cartItem.reduce((preve, curr) => {
+      return preve + (curr?.productId?.price * curr.quantity)
+    }, 0)
+    setNotDiscountTotalPrice(notDiscountPrice)
+  }, [cartItem])
+
+  // const handleLogoutOut = () => {
+  //     localStorage.clear()
+  //     dispatch(handleAddItemCart([]))
+  // }
+
+  // const fetchAddress = async () => {
+  //     try {
+  //         const response = await Axios({
+  //             ...SummaryApi.getAddress
+  //         })
+  //         const { data: responseData } = response
+
+  //         if (responseData.success) {
+  //             dispatch(handleAddAddress(responseData.data))
+  //         }
+  //     } catch (error) {
+  //         // AxiosToastError(error)
+  //     }
+  // }
+  // const fetchOrder = async () => {
+  //     try {
+  //         const response = await Axios({
+  //             ...SummaryApi.getOrderItems,
+  //         })
+  //         const { data: responseData } = response
+
+  //         if (responseData.success) {
+  //             dispatch(setOrder(responseData.data))
+  //         }
+  //     } catch (error) {
+  //         console.log(error)
+  //     }
+  // }
+
+  useEffect(() => {
+    fetchCartItem()
+  }, [user])
+
+  return (
+    <GlobalContext.Provider value={{
+      fetchCartItem,
+      updateCartItem,
+      deleteCartItem,
+      totalQuantity,
+      totalPrice,
+      notDiscountTotalPrice,
+
+    }}>
+      {children}
+    </GlobalContext.Provider>
+  )
 }
 
 export default GlobalProvider

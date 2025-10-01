@@ -9,9 +9,9 @@ import { pricewithDiscount } from '../utils/PriceWithDiscount'
 import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees'
 import imageEmpty from '../assets/Binkeyit Full Stack Ecommerce/empty_cart.webp'
 import toast from 'react-hot-toast';
-const CartPage = () => {
+const CartDisplay = ({close}) => {
   
-    const { notDiscountTotalPrice, totalPrice ,totalQty} = useGlobalContext()
+    const { notDiscountTotalPrice, totalPrice ,totalQuantity} = useGlobalContext()
     const cartItem  = useSelector(state => state.cartItem.cart)
     const user = useSelector(state => state.user)
     const navigate = useNavigate()
@@ -27,19 +27,16 @@ const CartPage = () => {
         toast("Please Login")
     }
   return (
-    <section className='bg-neutral-900 fixed top-0 bottom-0 right-0 left-0 bg-opacity-70 z-50'>
+    <section className='bg-neutral-900/60 fixed top-0 bottom-0 right-0 left-0 z-50'>
         <div className='bg-white w-full max-w-sm min-h-screen max-h-screen ml-auto'>
             <div className='flex items-center p-4 shadow-md gap-3 justify-between'>
                 <h2 className='font-semibold'>Cart</h2>
-                <Link to={"/"} className='lg:hidden'>
-                    <IoClose size={25}/>
-                </Link>
-                <button onClick={close} className='hidden lg:block'>
+                <button onClick={close} className=''>
                     <IoClose size={25}/>
                 </button>
             </div>
 
-            <div className='min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] bg-blue-50 p-2 flex flex-col gap-4'>
+            <div className='min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] bg-slate-100 p-2 flex flex-col gap-4'>
                 {/***display items */}
                 {
                     cartItem[0] ? (
@@ -53,14 +50,14 @@ const CartPage = () => {
                                         cartItem[0] && (
                                             cartItem.map((item,index)=>{
                                                 return(
-                                                    <div key={item?._id+"cartItemDisplay"} className='flex  w-full gap-4'>
-                                                        <div className='w-16 h-16 min-h-16 min-w-16 bg-red-500 border rounded'>
+                                                    <div key={item?._id+"cartItemDisplay"} className='flex w-full gap-4 items-center'>
+                                                        <div className='w-16 h-16 min-h-16 min-w-16  rounded'>
                                                             <img
                                                                 src={item?.productId?.image[0]}
                                                                 className='object-scale-down'
                                                             />
                                                         </div>
-                                                        <div className='w-full max-w-sm text-xs'>
+                                                        <div className='w-full max-w-sm text-xs flex flex-col gap-1'>
                                                             <p className='text-xs text-ellipsis line-clamp-2'>{item?.productId?.name}</p>
                                                             <p className='text-neutral-400'>{item?.productId?.unit}</p>
                                                             <p className='font-semibold'>{DisplayPriceInRupees(pricewithDiscount(item?.productId?.price,item?.productId?.discount))}</p>
@@ -74,7 +71,7 @@ const CartPage = () => {
                                         )
                                     }
                             </div>
-                            <div className='bg-white p-4'>
+                            <div className='bg-white p-4 flex flex-col gap-1'>
                                 <h3 className='font-semibold'>Bill details</h3>
                                 <div className='flex gap-4 justify-between ml-1'>
                                     <p>Items total</p>
@@ -82,15 +79,15 @@ const CartPage = () => {
                                 </div>
                                 <div className='flex gap-4 justify-between ml-1'>
                                     <p>Quntity total</p>
-                                    <p className='flex items-center gap-2'>{totalQty} item</p>
+                                    <p className='flex items-center gap-2'>{totalQuantity} item</p>
                                 </div>
                                 <div className='flex gap-4 justify-between ml-1'>
                                     <p>Delivery Charge</p>
                                     <p className='flex items-center gap-2'>Free</p>
                                 </div>
-                                <div className='font-semibold flex items-center justify-between gap-4'>
-                                    <p >Grand total</p>
-                                    <p>{DisplayPriceInRupees(totalPrice)}</p>
+                                <div className='font-semibold flex items-center justify-between gap-4 text-xl bg-slate-200 px-3 py-2 font-bold rounded mt-5'>
+                                    <p className=''>Grand total</p>
+                                    <p className='font-bold'>{DisplayPriceInRupees(totalPrice)}</p>
                                 </div>
                             </div>
                         </>
@@ -100,7 +97,7 @@ const CartPage = () => {
                                 src={imageEmpty}
                                 className='w-full h-full object-scale-down' 
                             />
-                            <Link onClick={close} to={"/"} className='block bg-green-600 px-4 py-2 text-white rounded'>Shop Now</Link>
+                            <Link to={"/"} className='block bg-green-600 px-4 py-2 text-white rounded'>Shop Now</Link>
                         </div>
                     )
                 }
@@ -128,4 +125,4 @@ const CartPage = () => {
   )
 }
 
-export default CartPage
+export default CartDisplay

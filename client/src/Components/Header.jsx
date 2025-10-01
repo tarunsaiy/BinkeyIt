@@ -11,7 +11,7 @@ import UserMenu from "./UserMenu";
 import { useState } from "react";
 import { useEffect } from "react";
 import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
-
+import CartDisplay from "./CartDisplay";
 const Header = () => {
   const [openUserMenu, setOpenUserMenu] = useState(false);
   const [isMobile] = useMobile();
@@ -21,13 +21,11 @@ const Header = () => {
   const user = useSelector((state) => state.user);
   const cartItem = useSelector((state) => state.cartItem.cart)
   const [totalQuantity, setTotalQuantity] = useState(0);
-
+  const [openCartSection,setOpenCartSection] = useState(false)
   const redirectLoginPage = () => {
     navigate("/login");
   };
-  const handleRedirectToCart = () => {
-    navigate("/cart");
-  }
+ 
   const handleCloseUserMenu = () => {
     setOpenUserMenu(false);
   }
@@ -44,7 +42,8 @@ const Header = () => {
   }, [cartItem])
 
   return (
-    <header className="h-28 lg:h-20 lg:shadow-md sticky top-0 flex items-center flex-col justify-center gap-1 bg-white z-50">
+    <header className="h-28 lg:h-20 lg:shadow-md sticky top-0 flex items-center flex-col justify-center gap-4 bg-white z-50">
+      <div className="container mx-auto flex items-center px-2 justify-around">
       {!(isSearchPage && isMobile) && (
         <div className="container mx-auto flex items-center px-2 justify-around">
           {/* Logo */}
@@ -115,7 +114,7 @@ const Header = () => {
                   Login
                 </button>
               )}
-              <button onClick={handleRedirectToCart} className="flex items-center font-semibold gap-1.5 bg-green-700 px-3 py-1 lg:py-2 rounded text-red-50">
+              <button onClick={()=>setOpenCartSection(true)} className="flex items-center font-semibold gap-1.5 bg-green-700 px-3 py-1 lg:py-2 rounded text-red-50">
                 {/* add to cart */}
                 <div className="animate-pulse">
                   <FaCartShopping size={20} />
@@ -138,10 +137,16 @@ const Header = () => {
           </div>
         </div>
       )}
+      </div>
 
-      <div className=" container mx-auto -mb-2 px-2 lg:hidden">
+      <div className=" container mx-auto px-2 lg:hidden">
         <Search />
       </div>
+      {
+            openCartSection && (
+                <CartDisplay close={()=>setOpenCartSection(false)}/>
+            )
+        }
       
     </header>
   );

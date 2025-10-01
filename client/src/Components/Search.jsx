@@ -9,16 +9,20 @@ const Search = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMobile();
-  const [isSearchPage, setIsSearchPage] = useState(false);
+  // const [isSearchPage, setIsSearchPage] = useState(false);
 
-  useEffect(() => {
-    const isSearch = location.pathname === "/search";
-    setIsSearchPage(isSearch);
-  }, [location]);
+  const isSearchPage = location.pathname === "/search";
 
+  const handleOnChange = (e) => {
+    const value  = e.target.value;
+    navigate(`/search?q=${value}`);
+  }
   const redirectToSearchPage = () => {
+
     navigate("/search");
   };
+  const param = useLocation();
+  const searchText = param?.search?.slice(3);
 
   return (
     <div className="w-full min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border border-gray-300 overflow-hidden flex items-center text-neutral-500 bg-gray-100 group ">
@@ -75,6 +79,8 @@ const Search = () => {
               placeholder="search for the items"
               className="bg-transparent h-full w-full outline-none"
               autoFocus="true"
+              onChange={handleOnChange}
+              value={searchText}
             />
           </div>
         )}

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import Axios from "../utils/axios";
 import AxiosToastError from '../utils/AxiosToastError.js'
 import SummaryApi from '../common/summaryApi';
-import Loading from '../components/Loading.jsx'
+import Loading from '../Components/Loading.jsx'
 import CardProduct from '../Components/CardProduct.jsx';
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom"

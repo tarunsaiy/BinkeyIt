@@ -5,7 +5,7 @@ import SummaryApi from '../common/summaryApi'
 import toast from "react-hot-toast";
 import Axios from "../utils/axios";
 import { IoSearchOutline } from "react-icons/io5"
-import Loading from '../components/Loading';
+import Loading from '../Components/Loading';
 import ProductCardAdmin from '../Components/ProductCardAdmin';
 const ProductAdmin = () => {
   const [productData, setProductData] = useState([])

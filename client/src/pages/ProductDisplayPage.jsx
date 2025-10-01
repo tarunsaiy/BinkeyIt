@@ -9,6 +9,7 @@ import image1 from '../assets/Binkeyit Full Stack Ecommerce/minute_delivery.png'
 import image2 from '../assets/Binkeyit Full Stack Ecommerce/Best_Prices_Offers.png'
 import image3 from '../assets/Binkeyit Full Stack Ecommerce/Wide_Assortment.png'
 import { pricewithDiscount } from '../utils/PriceWithDiscount.js'
+import AddToCartButton from '../Components/AddToCartButton.jsx';
 
 const ProductDisplayPage = () => {
   const [data, setData] = useState({
@@ -103,7 +104,7 @@ const ProductDisplayPage = () => {
               <p className='text-red-500 text-xs'>Out of Stock</p>
             ) : (
 
-              <button className='bg-green-700 py-3 px-5 font-semibold text-white rounded w-fit'>Add To Cart</button>
+              <AddToCartButton data={data}/>
             )
           }
         </div>

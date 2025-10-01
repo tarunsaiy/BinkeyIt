@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../assets/Binkeyit Full Stack Ecommerce/logo.png";
 import Search from "./Search";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaRegCircleUser } from "react-icons/fa6";
 import useMobile from "../hooks/useMobile";
 import { FaCartShopping } from "react-icons/fa6";
@@ -10,16 +10,24 @@ import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import UserMenu from "./UserMenu";
 import { useState } from "react";
 import { useEffect } from "react";
+import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
+
 const Header = () => {
+  const [openUserMenu, setOpenUserMenu] = useState(false);
   const [isMobile] = useMobile();
   const location = useLocation();
   const isSearchPage = location.pathname === "/search";
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const [openUserMenu, setOpenUserMenu] = useState(false);
+  const cartItem = useSelector((state) => state.cartItem.cart)
+  const [totalQuantity, setTotalQuantity] = useState(0);
+
   const redirectLoginPage = () => {
     navigate("/login");
   };
+  const handleRedirectToCart = () => {
+    navigate("/cart");
+  }
   const handleCloseUserMenu = () => {
     setOpenUserMenu(false);
   }
@@ -30,8 +38,13 @@ const Header = () => {
     }
     navigate("/user")
   }
+  useEffect(() => {
+    const totalQty = cartItem?.reduce((prev, curr) => prev + curr.quantity, 0);
+    setTotalQuantity(totalQty);
+  }, [cartItem])
+
   return (
-    <header className="h-24 lg:h-20 lg:shadow-md sticky top-0 flex items-center flex-col justify-center gap-1 bg-white z-50">
+    <header className="h-28 lg:h-20 lg:shadow-md sticky top-0 flex items-center flex-col justify-center gap-1 bg-white z-50">
       {!(isSearchPage && isMobile) && (
         <div className="container mx-auto flex items-center px-2 justify-around">
           {/* Logo */}
@@ -58,18 +71,18 @@ const Header = () => {
             <Search />
           </div>
 
-          <div className="">
+          <div className="flex items-center gap-10">
             {/* user icon only i mobile*/}
-            <button onClick = {handleMobileUser} className="text-neutral-600 lg:hidden hover:cursor-pointer">
+            <button onClick={handleMobileUser} className="text-neutral-600 lg:hidden hover:cursor-pointer">
               <FaRegCircleUser size={26} />
             </button>
 
             {/*desktop*/}
 
             {/* only on website */}
-            <div className="hidden lg:flex items-center gap-10">
+            <div className="flex items-center gap-10">
               {user?._id ? (
-                <div className="relative">
+                <div className="relative hidden lg:block">
                   <div
                     onClick={() => setOpenUserMenu((prev) => !prev)}
                     className="flex  select-none items-center gap-1 cursor-pointer"
@@ -87,7 +100,7 @@ const Header = () => {
                     openUserMenu && (
                       <div className="absolute right-0 top-14">
                         <div className="bg-white rounded p-4 min-w-52 lg:shadow-lg">
-                          <UserMenu close = {handleCloseUserMenu}/>
+                          <UserMenu close={handleCloseUserMenu} />
                         </div>
                       </div>
                     )
@@ -102,13 +115,23 @@ const Header = () => {
                   Login
                 </button>
               )}
-              <button className="flex h-[40px] items-center font-semibold gap-1.5 bg-red-600 px-4 py-3 rounded text-red-50 hover:bg-red-700">
+              <button onClick={handleRedirectToCart} className="flex items-center font-semibold gap-1.5 bg-green-700 px-3 py-1 lg:py-2 rounded text-red-50">
                 {/* add to cart */}
                 <div className="animate-pulse">
                   <FaCartShopping size={20} />
                 </div>
                 <div className="bold">
-                  <p>My cart</p>
+                  {
+                    cartItem.length > 0 ? (
+                      <div>
+                        <p>{totalQuantity}</p>
+                        {/* <p>{DisplayPriceInRupees(totalPrice)}</p> */}
+                      </div>
+                    ) : (
+
+                      <p>My cart</p>
+                    )
+                  }
                 </div>
               </button>
             </div>
@@ -116,9 +139,10 @@ const Header = () => {
         </div>
       )}
 
-      <div className=" container mx-auto px-2 lg:hidden">
+      <div className=" container mx-auto -mb-2 px-2 lg:hidden">
         <Search />
       </div>
+      
     </header>
   );
 };

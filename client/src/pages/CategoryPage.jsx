@@ -2,7 +2,7 @@ import React from 'react'
 import UploadCategory from '../Components/UploadCategory'
 import { useState } from 'react'
 import { useEffect } from 'react';
-import Loading from '../components/Loading';
+import Loading from '../Components/Loading';
 import NoData from '../components/NoData';
 import Axios from '../utils/axios';
 import { toast } from 'react-hot-toast';

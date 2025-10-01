@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees'
 import { Link } from 'react-router-dom'
 import validUrl from '../utils/validUrlConvert'
 import { pricewithDiscount } from '../utils/PriceWithDiscount'
+import { useGlobalContext } from '../Provider/GlobalProvider'
+import AddToCartButton from './AddToCartButton'
 
 const CardProduct = ({ data }) => {
+
+
     const url = `/product/${validUrl(data.name)}-${data._id}`
+    const [loading, setLoading] = useState(false)
+
     return (
         <Link to={url} className='border border-slate-200 shadow-sm p-4 grid gap-3 max-w-48 min-w-48 h-70 rounded '>
             <div className='min-h-20 max-h-32 rounded relative'>
@@ -42,10 +48,10 @@ const CardProduct = ({ data }) => {
                 <div className=''>
                     {data.stock === 0 ? (
                         <p className='text-red-600 text-center'>Out of Stock</p>
-                    ) : (
-
-                        <button className='bg-green-600 text-yellow-200 rounded px-4 py-1 hover:cursor-pointer hover:bg-green-700'>Add</button>
-                    )
+                    ) :
+                        (
+                            <AddToCartButton data={data} />
+                        )
                     }
                 </div>
             </div>

@@ -9,9 +9,11 @@ import { useDispatch } from "react-redux";
 import { setUserDetails } from "./Store/userSlice";
 import { setAllCategory, setAllSubCategory, setLoadingCategory } from "./Store/productSlice";
 import { useState } from "react";
-import  Axios from "./utils/axios.js";
-import  SummaryApi from "./common/summaryApi";
+import Axios from "./utils/axios.js";
+import SummaryApi from "./common/summaryApi";
 import AxiosToastError from "./utils/AxiosToastError"
+import { handleAddItemCart } from "./Store/CartProduct.js";
+import GlobalProvider from "./Provider/GlobalProvider.jsx";
 function App() {
 
   const dispatch = useDispatch()
@@ -53,30 +55,47 @@ function App() {
 
       if (responseData.success) {
         dispatch(setAllSubCategory(responseData.data))
-        
+
       }
     } catch (error) {
       AxiosToastError(error);
     }
-    
+
+  }
+  const fetchCartItem = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.getCartItem
+      })
+      const { data: responseData } = response;
+      if (responseData.success) {
+        dispatch(handleAddItemCart(responseData.data))
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
   }
 
   useEffect(() => {
     fetchUser()
     fetchCategory();
     fetchSubCategory();
+    // fetchCartItem();
   }, [])
 
 
   return (
-    <>
+
+    <GlobalProvider>
+
       <Header />
       <main className="min-h-[78vh]">
         <Outlet />
       </main>
       <Footer />
       <Toaster />
-    </>
+    </GlobalProvider>
+
   );
 }
 

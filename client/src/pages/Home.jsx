@@ -10,6 +10,7 @@ const Home = () => {
   const loadingCategory = useSelector((state) => state.product.loadingCategory);
   const categoryData = useSelector((state) => state.product.allCategory);
   const subCategoryData = useSelector((state) => state.product.subCategory);
+  
   const handleRedirectProduct = (id, cat) => {
     const subcategory = subCategoryData.find(sub => {
       const filterData = sub.category.some(c => {
@@ -17,9 +18,13 @@ const Home = () => {
       })
       return filterData ? true : null
     })
+    
     const url = `/${validUrl(cat)}-${id}/${validUrl(subcategory.name)}-${subcategory._id}`
     navigate(url)
+    
   }
+  
+
 
   return (
     <section className='bg-white'>
@@ -47,6 +52,7 @@ const Home = () => {
               return (
                 <div key={index} className='w-full h-full' onClick={() => handleRedirectProduct(cat._id, cat.name)}>
                   <div>
+     
                     <img src={cat.image} alt={cat.name} className='w-full h-full object-scale-down' />
                   </div>
                 </div>

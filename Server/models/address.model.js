@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
-    address_line1 : {
+    address_line : {
         type: String,
         default: ""
     },
@@ -26,6 +26,9 @@ const addressSchema = new mongoose.Schema({
     status : {
         type : Boolean,
         default : true
+    },
+    userId : {
+        type : mongoose.Schema.ObjectId,
     }
 }, { timestamps: true });
 

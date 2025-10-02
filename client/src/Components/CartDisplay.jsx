@@ -111,7 +111,7 @@ const CartDisplay = ({close}) => {
                             <div>
                                 {DisplayPriceInRupees(totalPrice)}
                             </div>
-                            <button onClick={redirectToCheckoutPage} className='flex items-center gap-1'>
+                            <button onClick={redirectToCheckoutPage} className='flex items-center gap-1 cursor-pointer'>
                                 Proceed
                                 <span><FaCaretRight/></span>
                             </button>

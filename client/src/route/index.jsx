@@ -21,6 +21,7 @@ import ProductListPage from "../pages/ProductListPage";
 import ProductDisplayPage from "../pages/ProductDisplayPage";
 import UserPermission from "../layouts/UserPermission";
 import CartMobile from "../pages/CartMobile";
+import CheckOutPage from "../pages/CheckOutPage";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -106,7 +107,10 @@ const router = createBrowserRouter([
                 path : "product/:product",
                 element : <ProductDisplayPage/>
             },
-            
+            {
+                path: "checkout",
+                element : <CheckOutPage/>
+            }
         ]
     }
 ])

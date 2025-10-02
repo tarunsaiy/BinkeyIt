@@ -10,7 +10,6 @@ import { useGlobalContext } from '../Provider/GlobalProvider';
 const AddAddress = ({ close }) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const { fetchAddress } = useGlobalContext();
-
     const onSubmit = async (data) => {
         try {
             const response = await Axios({

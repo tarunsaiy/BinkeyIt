@@ -3,7 +3,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
-import Loading from "../components/Loading";
+import Loading from "../Components/Loading";
 import OpenImage from "../Components/OpenImage";
 import Axios from "../utils/axios.js";
 import SummaryApi from "../common/summaryApi.js";

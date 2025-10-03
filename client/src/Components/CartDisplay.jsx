@@ -45,7 +45,7 @@ const CartDisplay = ({ close }) => {
                 <div className='min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] bg-slate-100 p-2 flex flex-col gap-4'>
                     {/***display items */}
                     {
-                        cartItem[0] && (
+                        (user?.id && cartItem[0]) && (
                             <>
                                 <div className='flex items-center justify-between px-4 py-2 bg-blue-100 text-blue-500 rounded-full'>
                                     <p>Your total savings</p>
@@ -101,28 +101,17 @@ const CartDisplay = ({ close }) => {
                     }
 
                     {
-                        user?._id ? (<div className='bg-white flex flex-col justify-center items-center'>
-                            <img
-                                src={imageEmpty}
-                                className='w-full h-full object-scale-down'
-                            />
-                            <div onClick={close} className='block bg-green-600 px-4 py-2 text-white rounded'>Shop Now</div>
-                        </div>) : (
+                        (user?._id && !cartItem[0]) && (
                             <div className='bg-white flex flex-col justify-center items-center'>
                                 <img
                                     src={imageEmpty}
                                     className='w-full h-full object-scale-down'
                                 />
-                                <div onClick={redirectToLogin} className='block bg-green-600 px-4 py-2 text-white rounded'>Login</div>
+                                <div onClick={close} className='block bg-green-600 px-4 py-2 text-white rounded'>Shop Now</div>
                             </div>
                         )
                     }
-                        
-                    
-                
-
                 </div>
-
                 {
                     cartItem[0] && (
                         <div className='p-2'>
@@ -140,7 +129,7 @@ const CartDisplay = ({ close }) => {
                 }
 
             </div>
-        </section>
+        </section >
     )
 }
 

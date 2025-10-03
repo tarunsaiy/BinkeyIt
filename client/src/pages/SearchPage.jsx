@@ -3,13 +3,13 @@ import { useLocation } from 'react-router-dom'
 import CardProduct from '../Components/CardProduct'
 import { useState } from 'react'
 import { useEffect } from 'react'
-import Loading from '../components/Loading'
+import Loading from '../Components/Loading'
 import Axios from '../utils/axios.js'
 import SummaryApi from '../common/summaryApi.js'
 import toast from 'react-hot-toast'
 import noDataImage from '../assets/Binkeyit Full Stack Ecommerce/nothing here yet.webp'
 import AxiosToastError from "../utils/AxiosToastError";
-import CardLoading from '../components/CardLoading'
+import CardLoading from '../Components/CardLoading'
 import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchPage = () => {
   const [data, setData] = useState([])

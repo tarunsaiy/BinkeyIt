@@ -32,7 +32,7 @@ const GlobalProvider = ({ children }) => {
       }
 
     } catch (error) {
-      console.log(error)
+      // AxiosToastError(error)
     }
   }
   const updateCartItem = async (id, qty) => {
@@ -51,7 +51,7 @@ const GlobalProvider = ({ children }) => {
         return responseData
       }
     } catch (error) {
-      AxiosToastError(error)
+      // AxiosToastError(error)
       return error
     }
   }
@@ -70,7 +70,7 @@ const GlobalProvider = ({ children }) => {
         fetchCartItem()
       }
     } catch (error) {
-      AxiosToastError(error)
+      // AxiosToastError(error)
     }
   }
 
@@ -115,12 +115,12 @@ const GlobalProvider = ({ children }) => {
               ...SummaryApi.getOrderItems,
           })
           const { data: responseData } = response
-          console.log(responseData)
+          
           if (responseData.success) {
               dispatch(setOrder(responseData.data))
           }
       } catch (error) {
-          console.log(error)
+          // AxiosToastError(error)
       }
   }
 

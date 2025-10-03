@@ -151,8 +151,6 @@ export async function webhookStripe(request, response) {
     const event = request.body;
     const endPointSecret = process.env.STRIPE_ENPOINT_WEBHOOK_SECRET_KEY
 
-    console.log("event", event)
-
     // Handle the event
     switch (event.type) {
         case 'checkout.session.completed':

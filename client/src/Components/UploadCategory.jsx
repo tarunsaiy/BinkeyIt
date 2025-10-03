@@ -5,6 +5,7 @@ import Axios from '../utils/axios';
 import SummaryApi from '../common/summaryApi';
 import { toast } from 'react-hot-toast';
 import AxiosToastError from '../utils/AxiosToastError.js';
+import Loading from '../Components/Loading.jsx';
 const UploadCategory = ({ close, fetchData }) => {
     const [data, setData] = useState({
         name: "",
@@ -37,6 +38,7 @@ const UploadCategory = ({ close, fetchData }) => {
     }
     const handleSubmit = async(e) => {
         e.preventDefault();
+        setLoading(true);
         try {
            
             const response = await Axios({
@@ -97,6 +99,7 @@ const UploadCategory = ({ close, fetchData }) => {
                     </div>
                     <button className={`${data.name && data.image ? "bg-amber-400" : "bg-gray-400"} px-4 py-2 w-full mt-6 rounded hover:cursor-pointer`} disabled={!data.name || !data.image}>Add Category</button>
                 </form>
+                
             </div >
 
         </section >

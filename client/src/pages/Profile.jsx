@@ -15,16 +15,16 @@ const Profile = () => {
     const user = useSelector((state) => state.user);
     const [openProfileAvatarEdit, setOpenProfileAvatarEdit] = useState(false);
     const [userData, setUserData] = useState({
-        name: user.name,
-        email: user.email,
-        mobile: user.mobile
+        name: user?.name,
+        email: user?.email,
+        mobile: user?.mobile
     });
 
     useEffect(() => {
         setUserData({
-            name: user.name,
-            email: user.email,
-            mobile: user.mobile
+            name: user?.name,
+            email: user?.email,
+            mobile: user?.mobile
         })
     }, [user])
     const [loading, setLoading] = useState(false);    const handleChange = (e) => {
@@ -63,7 +63,7 @@ const Profile = () => {
         <div className="p-4">
 
             <div className="w-20 h-20 flex items-center justify-center rounded-full overflow-hidden drop-shadow-sm">
-                {user.avatar ? (
+                {user?.avatar ? (
                     <img alt="{user.name}" src={user.avatar} className="w-full h-full" />
                 ) : (
                     <FaRegUserCircle size={60} />
@@ -82,15 +82,15 @@ const Profile = () => {
                 <div className="grid">
                     <label htmlFor="">Name</label>
                     <input type="text" required placeholder="Enter your name" className="p-2 bg-blue-50 outline-none border 
-                    border-blue-500/10 focus-within:border-yellow-300 rounded" value={userData.name} onChange={handleChange} name="name" />
+                    border-blue-500/10 focus-within:border-yellow-300 rounded" value={userData?.name} onChange={handleChange} name="name" />
                 </div>
                 <div className="grid">
                     <label htmlFor="">Email</label>
-                    <input type="email" required placeholder="Enter your email" className="p-2 bg-blue-50 outline-none border border-blue-500/10 focus-within:border-yellow-300 rounded" value={userData.email} onChange={handleChange} name="email" />
+                    <input type="email" required placeholder="Enter your email" className="p-2 bg-blue-50 outline-none border border-blue-500/10 focus-within:border-yellow-300 rounded" value={userData?.email} onChange={handleChange} name="email" />
                 </div>
                 <div className="grid">
                     <label htmlFor="">Mobile</label>
-                    <input type="text" required placeholder="Enter your mobile number" className="p-2 bg-blue-50 outline-none border border-blue-500/10 focus-within:border-yellow-300 rounded" value={userData.mobile} onChange={handleChange} name="mobile" />
+                    <input type="text" required placeholder="Enter your mobile number" className="p-2 bg-blue-50 outline-none border border-blue-500/10 focus-within:border-yellow-300 rounded" value={userData?.mobile} onChange={handleChange} name="mobile" />
                 </div>
                 <button className="bg-amber-300 hover:bg-amber-400 text-slate-900 py-2 rounded mt-4 font-semibold cursor-pointer">{
                     loading ? "Loading" : "Save Changes"

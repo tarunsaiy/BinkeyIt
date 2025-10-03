@@ -68,6 +68,9 @@ const CategoryPage = () => {
         catch(error) {
             AxiosToastError(error);
         }
+        finally {
+            setLoading(false);
+        }
     }
     return (
         <section>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import NoData from '../components/NoData'
+import NoData from '../Components/NoData'
 
 const MyOrders = () => {
   const orders = useSelector(state => state.orders.order)

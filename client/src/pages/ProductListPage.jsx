@@ -72,14 +72,14 @@ const ProductListPage = () => {
       <section className='sticky top-24 lg:top-20'>
       <div className='container sticky top-24  mx-auto grid grid-cols-[90px_1fr]  md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]'>
         {/**sub category **/}
-        <div className=' min-h-[88vh] max-h-[88vh] overflow-y-scroll  grid gap-1 shadow-md  bg-white py-2'>
+        <div className=' min-h-[88vh] max-h-[88vh] overflow-y-scroll  grid shadow-md  bg-white py-2'>
           {
             displaySubCategory.map((s, index) => {
                const link = `/${validUrl(s?.category[0]?.name)}-${s?.category[0]?._id}/${validUrl(s.name)}-${s._id}`
               return (
-                <Link to={link} key={index} className={`p-1 flex flex-col justify-center items-center shadow-md cursor-pointer lg:grid lg:grid-cols-[50px_1fr] ${subCategoryId === s._id ? "bg-green-200" : ""}`}
+                <Link to={link} key={index} className={`p-1 flex flex-col justify-center items-center shadow-md cursor-pointer lg:grid lg:max-h-30 lg:grid-cols-[50px_1fr] ${subCategoryId === s._id ? "bg-green-200" : ""}`}
                 >
-                  <div className='w-fit max-w-28 ' >
+                  <div className='w-fit max-w-28 0' >
                     <img
                       src={s.image}
                       alt='subCategory'

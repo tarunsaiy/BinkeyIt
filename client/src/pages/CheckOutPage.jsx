@@ -4,81 +4,82 @@ import AxiosToastError from '../utils/AxiosToastError'
 import Axios from '../utils/axios'
 import SummaryApi from '../common/summaryApi'
 import toast from 'react-hot-toast'
+import { loadStripe } from '@stripe/stripe-js'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import AddAddress from '../Components/AddAddress'
 import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees'
 const CheckOutPage = () => {
-  const {notDiscountTotalPrice, totalPrice, totalQuantity, fetchCartItem,} = useGlobalContext()
+  const { notDiscountTotalPrice, totalPrice, totalQuantity, fetchCartItem, fetchOrder} = useGlobalContext()
   const [openAddress, setOpenAddress] = useState(false)
   const addressList = useSelector(state => state.addresses.addressList)
   const [selectAddress, setSelectAddress] = useState(0)
   const cartItemsList = useSelector(state => state.cartItem.cart)
   const navigate = useNavigate()
 
-  const handleCashOnDelivery = async() => {
-      try {
-          const response = await Axios({
-            ...SummaryApi.CashOnDeliveryOrder,
-            data : {
-              list_items : cartItemsList,
-              addressId : addressList[selectAddress],
-              subTotalAmt : totalPrice,
-              totalAmt :  totalPrice,
-            }
-          })
-
-          const { data : responseData } = response
-          console.log(responseData.data)
-          if(responseData.success){
-              toast.success(responseData.message)
-              if(fetchCartItem){
-                fetchCartItem()
-              }
-              // if(fetchOrder){
-              //   fetchOrder()
-              // }
-              navigate('/success',{
-                state : {
-                  text : "Order"
-                }
-              })
-          }
-
-      } catch (error) {
-        AxiosToastError(error)
-      }
-  }
-
-  const handleOnlinePayment = async()=>{
+  const handleCashOnDelivery = async () => {
     try {
-        toast.loading("Loading...")
-        const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
-        const stripePromise = await loadStripe(stripePublicKey)
-       
-        const response = await Axios({
-            ...SummaryApi.payment_url,
-            data : {
-              list_items : cartItemsList,
-              addressId : addressList[selectAddress]?._id,
-              subTotalAmt : totalPrice,
-              totalAmt :  totalPrice,
-            }
-        })
+      const response = await Axios({
+        ...SummaryApi.CashOnDeliveryOrder,
+        data: {
+          list_items: cartItemsList,
+          addressId: addressList[selectAddress]?._id,
+          subTotalAmt: totalPrice,
+          totalAmt: totalPrice,
+        }
+      })
 
-        const { data : responseData } = response
-
-        stripePromise.redirectToCheckout({ sessionId : responseData.id })
-        
-        if(fetchCartItem){
+      const { data: responseData } = response
+      console.log(responseData.data)
+      if (responseData.success) {
+        toast.success(responseData.message)
+        if (fetchCartItem) {
           fetchCartItem()
         }
         if(fetchOrder){
           fetchOrder()
         }
+        navigate('/success', {
+          state: {
+            text: "Order"
+          }
+        })
+      }
+
     } catch (error) {
-        AxiosToastError(error)
+      AxiosToastError(error)
+    }
+  }
+
+  const handleOnlinePayment = async () => {
+    try {
+      toast.loading("Loading...")
+      const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY
+      const stripe = await loadStripe(stripePublicKey)
+
+      const response = await Axios({
+        ...SummaryApi.payment_url,
+        data: {
+          list_items: cartItemsList,
+          addressId: addressList[selectAddress]?._id,
+          subTotalAmt: totalPrice,
+          totalAmt: totalPrice,
+        }
+      })
+
+      const { data: responseData } = response
+
+      window.location.href = responseData.url;
+      
+      if (fetchCartItem) {
+        fetchCartItem()
+      }
+      if (fetchOrder) {
+        fetchOrder()
+      }
+    } catch (error) {
+      AxiosToastError(error)
     }
   }
   return (
@@ -91,7 +92,7 @@ const CheckOutPage = () => {
             {
               addressList.map((address, index) => {
                 return (
-                  <label htmlFor={"address" + index} className={!address.status && "hidden"}>
+                  <label key={index} htmlFor={"address" + index} className={address.status ? "" : "hidden"}>
                     <div className='rounded p-3 flex gap-3 hover:bg-blue-50'>
                       <div>
                         <input id={"address" + index} type='radio' value={index} onChange={(e) => setSelectAddress(e.target.value)} name='address' />

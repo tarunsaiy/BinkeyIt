@@ -22,6 +22,8 @@ const GlobalProvider = ({ children }) => {
   const [notDiscountTotalPrice, setNotDiscountTotalPrice] = useState(0)
   const fetchCartItem = async () => {
     try {
+      const token = localStorage.getItem("access_token");
+    if (!token) return; 
       const response = await Axios({
         ...SummaryApi.getCartItem
       })
@@ -97,6 +99,8 @@ const GlobalProvider = ({ children }) => {
 
   const fetchAddress = async () => {
       try {
+        const token = localStorage.getItem("access_token");
+    if (!token) return; 
           const response = await Axios({
               ...SummaryApi.getAddress
           })
@@ -111,6 +115,8 @@ const GlobalProvider = ({ children }) => {
   }
   const fetchOrder = async () => {
       try {
+        const token = localStorage.getItem("access_token");
+    if (!token) return; 
           const response = await Axios({
               ...SummaryApi.getOrderItems,
           })
@@ -120,12 +126,11 @@ const GlobalProvider = ({ children }) => {
               dispatch(setOrder(responseData.data))
           }
       } catch (error) {
-          // AxiosToastError(error)
+          AxiosToastError(error)
       }
   }
 
   useEffect(() => {
-    handleLogoutOut()
     fetchCartItem(),
     fetchAddress(),
     fetchOrder()

@@ -8,7 +8,7 @@ const Axios = axios.create({
 // sending access token im header
 Axios.interceptors.request.use(
     async (config) => {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem("access_token");
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
@@ -28,7 +28,7 @@ Axios.interceptors.request.use(
         let originalRequest = error.config;
         if (error.response.status === 401 && !originalRequest.retry) {
             originalRequest.retry = true;
-            const refreshToken = localStorage.getItem("refreshToken");
+            const refreshToken = localStorage.getItem("refresh_token");
             if (refreshToken) {
                 const newAccessToken = await refreshAccessToken(refreshToken);
                 if (newAccessToken) {
@@ -49,7 +49,7 @@ const refreshAccessToken = async (refreshToken) => {
             }
         })
         const accessToken = response.data.data.accessToken
-        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("access_token", accessToken);
         return accessToken;
     } catch (error) {
         console.log(error); 

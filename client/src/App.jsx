@@ -14,10 +14,14 @@ import SummaryApi from "./common/summaryApi";
 import AxiosToastError from "./utils/AxiosToastError"
 import { handleAddItemCart } from "./Store/CartProduct.js";
 import GlobalProvider from "./Provider/GlobalProvider.jsx";
+import { useSelector } from "react-redux";
 function App() {
+
 
   const dispatch = useDispatch()
   const fetchUser = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
     const userData = await fetchUserDetails()
     dispatch(setUserDetails(userData?.data))
   }
@@ -27,6 +31,7 @@ function App() {
     try {
       // setLoading(true);
       dispatch(setLoadingCategory(true))
+
       const response = await Axios({
         ...SummaryApi.getCategory
       })
@@ -63,6 +68,8 @@ function App() {
 
   }
   const fetchCartItem = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
     try {
       const response = await Axios({
         ...SummaryApi.getCartItem

@@ -1,5 +1,3 @@
-import { getProduct, updateProduct } from "../../../Server/controllers/product.controller";
-
 export const baseURL = "http://localhost:8080";
 const SummaryApi = {
     register : {

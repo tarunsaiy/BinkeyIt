@@ -11,7 +11,7 @@ import AxiosToastError from '../utils/AxiosToastError'
 import { useGlobalContext } from '../Provider/GlobalProvider'
 import { Navigate, useNavigate } from 'react-router-dom'
 const AddToCartButton = ({ data }) => {
-        const user = useSelector((state) => state.user);
+    const user = useSelector((state) => state.user);
     const navigate = useNavigate()
     const { fetchCartItem, updateCartItem, deleteCartItem } = useGlobalContext()
     const [loading, setLoading] = useState(false)
@@ -19,14 +19,15 @@ const AddToCartButton = ({ data }) => {
     const [isAvailableCart, setIsAvailableCart] = useState(false)
     const [qty, setQty] = useState(0)
     const [cartItemDetails, setCartItemsDetails] = useState()
-    
+
     const handleADDTocart = async (e) => {
-        if (!user) {
-            navigate('/login')
-            return;
-        }
+
         e.preventDefault()
         e.stopPropagation() // `e.stopPropagation()` is used to prevent the event from bubbling up to the parent element.
+        if (!user || !user._id) {
+            navigate('/login');
+            return;
+        }
         try {
             setLoading(true)
             const response = await Axios({

@@ -23,6 +23,7 @@ const AddToCartButton = ({ data }) => {
     const handleADDTocart = async (e) => {
         if (!user) {
             navigate('/login')
+            return;
         }
         e.preventDefault()
         e.stopPropagation() // `e.stopPropagation()` is used to prevent the event from bubbling up to the parent element.

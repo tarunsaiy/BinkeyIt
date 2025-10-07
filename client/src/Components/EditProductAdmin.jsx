@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
 import AxiosToastError from "../utils/AxiosToastError";
 // import uploadImage from "../utils/UploadImage";
-// import AddFieldComponent from "../components/AddFieldComponent";
+// import AddFieldComponent from "../Components/AddFieldComponent";
 
 const EditProductAdmin = ({ close, data: propsData, fetchProductData }) => {
   const allCategory = useSelector((state) => state.product.allCategory)

@@ -109,7 +109,7 @@ const UploadProduct = () => {
             }
             if (response.data.success) {
                 toast.success(response.data.message);
-                playSound(successSound)
+                // playSound(successSound)
                 setData({
                     name: "",
                     image: [],

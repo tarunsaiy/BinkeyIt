@@ -131,11 +131,7 @@ const ProductListPage = () => {
                     </div>
                   </div>
 
-                  {
-                    loading && (
-                      <Loading />
-                    )
-                  }
+                  
 
                 </div>
               </>

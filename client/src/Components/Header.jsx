@@ -39,7 +39,7 @@ const Header = () => {
     <header className="h-28 lg:h-20 lg:shadow-md sticky top-0 flex items-center flex-col justify-center gap-4 bg-white z-50">
       <div className="container mx-auto flex items-center px-2 justify-around">
       {!(isSearchPage && isMobile) && (
-        <div className="container mx-auto flex items-center px-2 justify-between">
+        <div className="container mx-auto flex items-center px-2 justify-between sm-justify-around">
           {/* Logo */}
           <div className="h-full">
             <Link to={"/"} className="h-full flex justify-center items-center">
@@ -64,7 +64,7 @@ const Header = () => {
             <Search />
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-around">
 
             <div className="flex items-center gap-2">
               {user?._id ? (

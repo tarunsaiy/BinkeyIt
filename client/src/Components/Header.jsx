@@ -66,7 +66,7 @@ const Header = () => {
 
           <div className="flex justify-around">
 
-            <div className="flex items-center gap-2">
+            <div className="flex relative items-center gap-2">
               {user?._id ? (
                 <div className="block">
                   <div

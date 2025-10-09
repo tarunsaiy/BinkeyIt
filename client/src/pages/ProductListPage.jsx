@@ -69,25 +69,33 @@ const ProductListPage = () => {
 
 
   return (
-      <section className='sticky top-24 lg:top-20'>
+    <section className='sticky top-24 lg:top-20'>
       <div className='container sticky top-24  mx-auto grid grid-cols-[90px_1fr]  md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]'>
         {/**sub category **/}
         <div className=' min-h-[88vh] max-h-[88vh] overflow-y-scroll  grid shadow-md  bg-white py-2'>
           {
             displaySubCategory.map((s, index) => {
-               const link = `/${validUrl(s?.category[0]?.name)}-${s?.category[0]?._id}/${validUrl(s.name)}-${s._id}`
+              const link = `/${validUrl(s?.category[0]?.name)}-${s?.category[0]?._id}/${validUrl(s.name)}-${s._id}`
               return (
-                <Link to={link} key={index} className={`p-1 grid shadow-md cursor-pointer lg:grid max-h-30 lg:grid-cols-[50px_1fr] ${subCategoryId === s._id ? "bg-green-200" : ""}`}
+                <Link
+                  to={link}
+                  key={index}
+                  className={`p-2 grid shadow-md cursor-pointer rounded-md
+    grid-cols-1 items-center justify-center text-center
+    lg:grid-cols-[50px_1fr] lg:text-left
+    max-h-32 w-full bg-white
+    ${subCategoryId === s._id ? "bg-green-200" : ""}`}
                 >
-                  <div className='w-fit max-w-28 0' >
+                  <div className="flex justify-center items-center w-full h-16 lg:h-full overflow-hidden">
                     <img
                       src={s.image}
-                      alt='subCategory'
-                      className=' w-14 object-scale-down'
+                      alt="subCategory"
+                      className="w-14 h-14 object-contain mx-auto"
                     />
                   </div>
-                  <p className='lg:mt-0 text-xs text-center'>{s.name}</p>
+                  <p className="text-xs mt-1 lg:mt-0 truncate">{s.name}</p>
                 </Link>
+
               )
             })
           }
@@ -101,8 +109,8 @@ const ProductListPage = () => {
           </div>
           <div>
 
-           <div className='min-h-[80vh] max-h-[80vh] overflow-y-auto relative'>
-            <div className=' grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4  w-full mx-auto'>
+            <div className='min-h-[80vh] max-h-[80vh] overflow-y-auto relative'>
+              <div className=' grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4  w-full mx-auto'>
                 {
                   data.map((p, index) => {
                     return (
@@ -114,7 +122,7 @@ const ProductListPage = () => {
                   })
                 }
               </div>
-           </div>
+            </div>
 
             {
               loading && (
@@ -124,7 +132,7 @@ const ProductListPage = () => {
 
           </div>
         </div>
-        
+
       </div>
     </section>
   )

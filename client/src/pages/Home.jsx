@@ -42,7 +42,7 @@ const Home = () => {
           <Loading/>
         )
       }
-      <div className='container mx-auto px-4 my-2 grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2'>
+      <div className='container mx-auto px-4 my-2 grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-2'>
         {
           loadingCategory ? (
             <>

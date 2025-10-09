@@ -77,7 +77,7 @@ const ProductListPage = () => {
             displaySubCategory.map((s, index) => {
                const link = `/${validUrl(s?.category[0]?.name)}-${s?.category[0]?._id}/${validUrl(s.name)}-${s._id}`
               return (
-                <Link to={link} key={index} className={`p-1 flex flex-col justify-center items-center shadow-md cursor-pointer lg:grid max-h-30 lg:grid-cols-[50px_1fr] ${subCategoryId === s._id ? "bg-green-200" : ""}`}
+                <Link to={link} key={index} className={`p-1 grid shadow-md cursor-pointer lg:grid max-h-30 lg:grid-cols-[50px_1fr] ${subCategoryId === s._id ? "bg-green-200" : ""}`}
                 >
                   <div className='w-fit max-w-28 0' >
                     <img

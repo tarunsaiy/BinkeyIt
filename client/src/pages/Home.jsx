@@ -46,13 +46,7 @@ const Home = () => {
         {
           loadingCategory ? (
             <>
-              
-              {new Array(6).fill(null).map((_, index) => (
-                <div key={index} className='rounded p-4 min-h-36 grid gap-2 shadow animate-pulse'>
-                  <div className='bg-slate-200 min-h-24 rounded'></div>
-                  <div className='bg-slate-200 h-8 rounded'></div>
-                </div>
-              ))}
+
             </>
           ) : (
             categoryData.map((cat, index) => (

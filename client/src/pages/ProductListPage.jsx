@@ -8,7 +8,7 @@ import CardProduct from '../Components/CardProduct.jsx';
 import { useSelector } from 'react-redux';
 import { Link } from "react-router-dom"
 import validUrl from '../utils/validUrlConvert.js';
-import Loading from '../Components/Loading.jsx';
+// import Loading from '../Components/Loading.jsx';
 const ProductListPage = () => {
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)

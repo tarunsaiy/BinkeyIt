@@ -40,18 +40,19 @@ const Home = () => {
         {
           loadingCategory ? (
             <>
-              <Loading/>
+              <Loading />
               <div className='container mx-auto px-4 my-2 grid grid-cols-5 lg:grid-cols-10 gap-2'>
-              {new Array(10).fill(null).map((_, index) => (
-                <div key={index} className='rounded p-4 min-h-36 grid gap-2 shadow animate-pulse'>
-                  <div className='bg-slate-200 min-h-24 rounded'></div>
-                  <div className='bg-slate-200 h-8 rounded'></div>
-                </div>
-              ))}
+                {new Array(10).fill(null).map((_, index) => (
+                  <div key={index} className='rounded p-4 min-h-36 grid gap-2 shadow animate-pulse'>
+                    <div className='bg-slate-200 min-h-24 rounded'></div>
+                    <div className='bg-slate-200 h-8 rounded'></div>
+                  </div>
+                ))}
 
               </div>
             </>
           ) : (
+            <div className='container mx-auto px-4 my-2 grid grid-cols-5 lg:grid-cols-10 gap-2'>
             categoryData.map((cat, index) => (
               <div
                 key={index}
@@ -66,7 +67,8 @@ const Home = () => {
                   />
                 </div>
               </div>
-            ))
+              ))
+            </div>
           )
         }
       </div>

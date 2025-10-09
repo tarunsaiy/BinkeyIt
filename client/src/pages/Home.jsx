@@ -42,12 +42,12 @@ const Home = () => {
           <Loading/>
         )
       }
-      <div className='container mx-auto px-4 my-2 grid grid-cols-5 lg:grid-cols-10 gap-2'>
+      <div className='container mx-auto px-4 my-2 grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2'>
         {
           loadingCategory ? (
             <>
               
-              {new Array(10).fill(null).map((_, index) => (
+              {new Array(6).fill(null).map((_, index) => (
                 <div key={index} className='rounded p-4 min-h-36 grid gap-2 shadow animate-pulse'>
                   <div className='bg-slate-200 min-h-24 rounded'></div>
                   <div className='bg-slate-200 h-8 rounded'></div>

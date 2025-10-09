@@ -29,13 +29,7 @@ const Header = () => {
   const handleCloseUserMenu = () => {
     setOpenUserMenu(false);
   }
-  const handleMobileUser = () => {
-    if (!user._id) {
-      navigate("/login");
-      return;
-    }
-    navigate("/user")
-  }
+ 
   useEffect(() => {
     const totalQty = cartItem?.reduce((prev, curr) => prev + curr.quantity, 0);
     setTotalQuantity(totalQty);
@@ -45,7 +39,7 @@ const Header = () => {
     <header className="h-28 lg:h-20 lg:shadow-md sticky top-0 flex items-center flex-col justify-center gap-4 bg-white z-50">
       <div className="container mx-auto flex items-center px-2 justify-around">
       {!(isSearchPage && isMobile) && (
-        <div className="container mx-auto flex items-center px-2 justify-around">
+        <div className="container mx-auto flex items-center px-2 justify-between">
           {/* Logo */}
           <div className="h-full">
             <Link to={"/"} className="h-full flex justify-center items-center">
@@ -70,18 +64,11 @@ const Header = () => {
             <Search />
           </div>
 
-          <div className="flex items-center gap-10">
-            {/* user icon only i mobile*/}
-            <button onClick={handleMobileUser} className="text-neutral-600 lg:hidden hover:cursor-pointer">
-              <FaRegCircleUser size={26} />
-            </button>
+          <div className="flex justify-end">
 
-            {/*desktop*/}
-
-            {/* only on website */}
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-2">
               {user?._id ? (
-                <div className="relative hidden lg:block">
+                <div className="block">
                   <div
                     onClick={() => setOpenUserMenu((prev) => !prev)}
                     className="flex  select-none items-center gap-1 cursor-pointer"
@@ -109,14 +96,14 @@ const Header = () => {
               ) : (
                 <button
                   onClick={redirectLoginPage}
-                  className="font-semibold h-[40px] px-5 cursor-pointer text-red-50  rounded bg-yellow-500 text-black"
+                  className="font-semibold h-[40px] px-5 cursor-pointer   rounded bg-amber-400 text-black w-20"
                 >
                   Login
                 </button>
               )}
-              <button onClick={()=>setOpenCartSection(true)} className="flex items-center font-semibold gap-1.5 bg-green-700 px-3 py-1 lg:py-2 rounded text-red-50">
+              <button onClick={()=>setOpenCartSection(true)} className="flex w-20 items-center font-semibold justify-center bg-green-700 px-3 py-1 lg:py-2 rounded text-red-50 h-[40px]">
                 {/* add to cart */}
-                <div className="animate-pulse">
+                <div>
                   <FaCartShopping size={20} />
                 </div>
                 <div className="bold">
@@ -128,7 +115,7 @@ const Header = () => {
                       </div>
                     ) : (
 
-                      <p>My cart</p>
+                      <></>
                     )
                   }
                 </div>

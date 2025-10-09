@@ -3,7 +3,7 @@ import banner from '../assets/Binkeyit Full Stack Ecommerce/banner.jpg'
 import mobileBanner from '../assets/Binkeyit Full Stack Ecommerce/banner-mobile.jpg'
 import { useSelector } from 'react-redux'
 import validUrl from '../utils/validUrlConvert'
-import Loading from '../Components/Loading'
+
 import { Navigate, useNavigate } from 'react-router-dom'
 import CategoryWiseProductDisplay from '../Components/CategoryWiseProductDisplay'
 const Home = () => {
@@ -40,7 +40,7 @@ const Home = () => {
         {
           loadingCategory ? (
             <>
-              <Loading />
+              
               {new Array(10).fill(null).map((_, index) => (
                 <div key={index} className='rounded p-4 min-h-36 grid gap-2 shadow animate-pulse'>
                   <div className='bg-slate-200 min-h-24 rounded'></div>

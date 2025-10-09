@@ -109,7 +109,7 @@ const Header = () => {
               ) : (
                 <button
                   onClick={redirectLoginPage}
-                  className="font-semibold h-[40px] px-5 cursor-pointer text-red-50  rounded bg-yellow-400 hover:bg-red-700"
+                  className="font-semibold h-[40px] px-5 cursor-pointer text-red-50  rounded bg-yellow-500 text-black"
                 >
                   Login
                 </button>

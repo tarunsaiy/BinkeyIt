@@ -104,41 +104,34 @@ const ProductListPage = () => {
 
         {/**Product **/}
 
-        <div className='sticky top-20'>
-          {
-            loading ? (
-              <Loading/> //loading
-            ) : (
-              <>
-                <div className='bg-white shadow-md p-4 z-10'>
-                  <h3 className='font-semibold'>{subCategoryName}</h3>
-                </div>
-                <div>
+        {/* Product Section */}
+        <div className="sticky top-20">
+          <div className="bg-white shadow-md p-4 z-10">
+            <h3 className="font-semibold">{subCategoryName}</h3>
+          </div>
 
-                  <div className='min-h-[80vh] max-h-[80vh] overflow-y-auto relative'>
-                    <div className=' grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4  w-full mx-auto'>
-                      {
-                        data.map((p, index) => {
-                          return (
-                            <CardProduct
-                              data={p}
+          {/* Loading should appear right below the subcategory name */}
+          {loading && (
+            <div className="flex justify-center py-6">
+              <Loading />
+            </div>
+          )}
 
-                              key={p._id + "productSubCategory" + index}
-                            />
-                          )
-                        })
-                      }
-                    </div>
-                  </div>
-
-                  
-
-                </div>
-              </>
-            )
-          }
-
+          {/* Product Grid */}
+          {!loading && (
+            <div className="min-h-[80vh] max-h-[80vh] overflow-y-auto relative">
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-4 gap-4 w-full mx-auto">
+                {data.map((p, index) => (
+                  <CardProduct
+                    data={p}
+                    key={p._id + 'productSubCategory' + index}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+
 
 
 

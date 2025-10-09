@@ -3,6 +3,7 @@ import banner from '../assets/Binkeyit Full Stack Ecommerce/banner.jpg'
 import mobileBanner from '../assets/Binkeyit Full Stack Ecommerce/banner-mobile.jpg'
 import { useSelector } from 'react-redux'
 import validUrl from '../utils/validUrlConvert'
+import Loading from '../Components/Loading'
 import { Navigate, useNavigate } from 'react-router-dom'
 import CategoryWiseProductDisplay from '../Components/CategoryWiseProductDisplay'
 const Home = () => {

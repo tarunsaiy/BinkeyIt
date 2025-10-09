@@ -107,7 +107,7 @@ const ProductListPage = () => {
         <div className='sticky top-20'>
           {
             loading ? (
-              <Loading />
+              <Loading/> //loading
             ) : (
               <>
                 <div className='bg-white shadow-md p-4 z-10'>
@@ -122,6 +122,7 @@ const ProductListPage = () => {
                           return (
                             <CardProduct
                               data={p}
+
                               key={p._id + "productSubCategory" + index}
                             />
                           )

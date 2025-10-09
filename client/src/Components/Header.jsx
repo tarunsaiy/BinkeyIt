@@ -101,7 +101,7 @@ const Header = () => {
                   Login
                 </button>
               )}
-              <button onClick={()=>setOpenCartSection(true)} className="flex w-fit items-center font-semibold justify-center bg-green-700 px-2 py-1 lg:py-2 rounded text-red-50 h-[40px]">
+              <button onClick={()=>setOpenCartSection(true)} className="flex w-fit items-center font-semibold justify-center bg-green-700 px-2 py-1 lg:py-2 rounded text-red-50 h-[40px] gap-2">
                 {/* add to cart */}
                 <div>
                   <FaCartShopping size={20} />

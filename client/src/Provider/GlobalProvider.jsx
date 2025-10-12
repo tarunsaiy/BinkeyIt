@@ -53,7 +53,7 @@ const GlobalProvider = ({ children }) => {
         return responseData
       }
     } catch (error) {
-      // AxiosToastError(error)
+      AxiosToastError(error)
       return error
     }
   }
@@ -72,7 +72,7 @@ const GlobalProvider = ({ children }) => {
         fetchCartItem()
       }
     } catch (error) {
-      // AxiosToastError(error)
+      AxiosToastError(error)
     }
   }
 
@@ -126,7 +126,7 @@ const GlobalProvider = ({ children }) => {
               dispatch(setOrder(responseData.data))
           }
       } catch (error) {
-          AxiosToastError(error)
+          // AxiosToastError(error)
       }
   }
 

@@ -13,7 +13,7 @@ const CardProduct = ({ data }) => {
     const [loading, setLoading] = useState(false)
 
     return (
-        <Link to={url} className='border border-slate-200 shadow-sm p-4 grid gap-3 max-w-48 min-w-48 h-70 rounded '>
+        <Link to={url} className='border border-slate-200 p-4 grid gap-3 max-w-48 min-w-48 h-70 rounded-2xl'>
             <div className='min-h-20 max-h-32 rounded relative'>
                 {data.discount > 0 &&
                     (

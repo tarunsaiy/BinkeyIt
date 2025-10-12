@@ -19,7 +19,7 @@ body {
 }
 
 .thin-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #eaeaea;
+  background-color: #eeeeee;
   border-radius: 3px;
 }
 

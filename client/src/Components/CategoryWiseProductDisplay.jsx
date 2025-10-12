@@ -64,7 +64,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
                 <h3 className='font-semibold'>{name}</h3>
                 <Link to={URL} className="text-green-600">See All</Link>
             </div>
-            <div className='flex items-center gap-4 md:gap-6 lg:gap-10 overflow-x-auto p-4  mx-auto' ref={containerRef}>
+            <div className='flex items-center gap-4 md:gap-5 lg:gap-6 overflow-x-auto p-4  mx-auto' ref={containerRef}>
                 {
                     loading && loadingCardNumber.map((_, ind) => {
                         return (

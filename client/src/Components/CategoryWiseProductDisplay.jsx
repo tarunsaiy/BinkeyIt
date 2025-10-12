@@ -60,8 +60,8 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     const loadingCardNumber = new Array(6).fill(null)
     return (
         <div>
-            <div className='container mx-auto p-4 flex items-center justify-between gap-4'>
-                <h3 className='font-bold text-2xl text-slate-700'>{name}</h3>
+            <div className='container mx-auto p-2 flex items-center justify-between gap-4'>
+                <h3 className='font-bold text-lg text-slate-700'>{name}</h3>
                 <Link to={URL} className="text-green-600">See All</Link>
             </div>
             <div className='flex items-center gap-4 md:gap-5 lg:gap-6 overflow-x-auto p-4  mx-auto thin-scrollbar' ref={containerRef}>

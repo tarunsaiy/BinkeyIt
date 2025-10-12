@@ -13,7 +13,7 @@ const CardProduct = ({ data }) => {
     const [loading, setLoading] = useState(false)
 
     return (
-        <Link to={url} className='border border-slate-200 p-4 grid gap-3 max-w-48 min-w-48 h-70 rounded-2xl'>
+        <Link to={url} className='border border-slate-200 p-4 grid gap-3 max-w-48 min-w-48 h-60 rounded-2xl'>
             <div className='min-h-20 max-h-32 rounded relative'>
                 {data.discount > 0 &&
                     (
@@ -32,12 +32,12 @@ const CardProduct = ({ data }) => {
             <div className='font-medium text-ellipsis line-clamp-1 text-slate-600'>
                 {data.name}
             </div>
-            <div className='px-1 w-fit text-gray-700 text-xs'>
+            <div className='px-1 w-fit text-gray-500 text-xs'>
                 {data.unit}
             </div>
             <div className='flex justify-between  items-center gap-3'>
                 <div className=''>
-                    <p className='font-semibold text-slate-800 '>
+                    <p className='font-semibold text-slate-600 '>
                         {DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}
                     </p>
                     <p className='text-gray-500 text-xs font-semibold'>

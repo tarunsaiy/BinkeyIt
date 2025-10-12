@@ -14,7 +14,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 const SearchPage = () => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
-  const loadingArrayCard = new Array(10).fill(null)
+  const loadingArrayCard = new Array(12).fill(null)
   const [page, setPage] = useState(1)
   const [totalPage, setTotalPage] = useState(1)
   const params = useLocation()

@@ -17,7 +17,7 @@ const CardProduct = ({ data }) => {
             <div className='min-h-20 max-h-32 rounded relative'>
                 {data.discount > 0 &&
                     (
-                        <div className='bg-blue-500 text-white px-1 text-xs py-0.5 absolute -top-4 -left-4 flex items-center flex-col justify-center font-semibold'>
+                        <div className='bg-blue-500 text-white px-1 text-xs py-0.5 absolute -top-4 -left-1 flex items-center flex-col justify-center font-semibold'>
                             <p className='text-xs'>
                                 {data.discount}%
                             </p>

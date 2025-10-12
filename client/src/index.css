@@ -26,5 +26,5 @@ body {
 /* For Firefox */
 .thin-scrollbar {
   scrollbar-width: thin;           /* "auto" or "thin" */
-  scrollbar-color: #c1c1c1 transparent;
+  scrollbar-color: #e1e1e1 transparent;
 }

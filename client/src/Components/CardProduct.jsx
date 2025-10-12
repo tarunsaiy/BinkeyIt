@@ -29,7 +29,7 @@ const CardProduct = ({ data }) => {
             <div className='px-2 text-green-600 bg-green-100 text-xs font-semibold rounded w-fit'>
                 10 min
             </div>
-            <div className='font-medium text-ellipsis line-clamp-1'>
+            <div className='font-medium text-ellipsis line-clamp-1 text-slate-600'>
                 {data.name}
             </div>
             <div className='px-1 w-fit text-gray-700 text-xs'>

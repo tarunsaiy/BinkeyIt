@@ -9,3 +9,22 @@ body {
   font-weight: 600;
   font-size: 14px;
 }
+/* For Chrome, Edge, and Safari */
+.thin-scrollbar::-webkit-scrollbar {
+  height: 6px;             /* horizontal scrollbar height */
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* optional */
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 3px;
+}
+
+/* For Firefox */
+.thin-scrollbar {
+  scrollbar-width: thin;           /* "auto" or "thin" */
+  scrollbar-color: #c1c1c1 transparent;
+}

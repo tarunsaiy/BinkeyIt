@@ -1,21 +1,43 @@
 import React from 'react'
 import { IoClose } from 'react-icons/io5'
+import {
+  dashboardCloseBtnClass,
+  dashboardInputClass,
+  dashboardLabelClass,
+  dashboardModalBodyClass,
+  dashboardModalClass,
+  dashboardModalHeaderClass,
+  dashboardModalOverlayClass,
+  dashboardModalTitleClass,
+  dashboardPrimaryBtnClass,
+} from '../utils/dashboardStyles'
 
-const AddField = ({close, onChange, onClick, value}) => {
+const AddField = ({ close, onChange, onClick, value }) => {
   return (
-    <section className='fixed top-0 bottom-0 right-0 left-0 z-50 bg-neutral-900/70 flex justify-center items-center'>
-        <div className="bg-white rounded p-4 w-full max-w-md">
-            <div className='flex justify-between items-center gap-3'>
-                <h1 className='font-semibold'>Add Field</h1>
-                <button onClick={close} className='cursor-pointer'>
-                    <IoClose/>
-                </button>
-
-            </div>
-            <input onChange={onChange} value={value}
-             type="text" className='bg-slate-100 my-3 w-full focus-within:outline-amber-300 rounded p-2' placeholder='Enter feild name'/>
-            <button onClick={onClick} className='my-3 mx-auto flex items-center gap-2 w-max justify-center bg-yellow-400 py-1 px-2 rounded cursor-pointer'>Add Field</button>
+    <section className={dashboardModalOverlayClass}>
+      <div className={dashboardModalClass}>
+        <div className={dashboardModalHeaderClass}>
+          <h2 className={dashboardModalTitleClass}>Add field</h2>
+          <button type="button" onClick={close} className={dashboardCloseBtnClass}>
+            <IoClose size={22} />
+          </button>
         </div>
+
+        <div className={dashboardModalBodyClass}>
+          <label htmlFor="fieldName" className={dashboardLabelClass}>Field name</label>
+          <input
+            id="fieldName"
+            onChange={onChange}
+            value={value}
+            type="text"
+            className={dashboardInputClass}
+            placeholder="Enter field name"
+          />
+          <button type="button" onClick={onClick} className={`mt-4 ${dashboardPrimaryBtnClass}`}>
+            Add field
+          </button>
+        </div>
+      </div>
     </section>
   )
 }

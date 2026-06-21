@@ -11,7 +11,17 @@ import { MdDelete } from 'react-icons/md'
 import EditSubCategory from '../Components/EditSubCategory'
 import ConfirmBoc from '../Components/ConfirmBoc'
 import toast from 'react-hot-toast'
-
+import {
+  dashboardAddBtnClass,
+  dashboardDangerBtnClass,
+  dashboardPageClass,
+  dashboardScrollAreaClass,
+  dashboardSecondaryBtnClass,
+  dashboardItemTitleClass,
+  dashboardPaginationTextClass,
+  dashboardTagMutedClass,
+  dashboardTitleClass,
+} from '../utils/dashboardStyles'
 
 const SubCategoryPage = () => {
   const [openAddSubCategory, setOpenAddSubCategory] = useState(false)
@@ -28,9 +38,8 @@ const SubCategoryPage = () => {
   const [openConfirmBoxDelete, setOpenConfirmBoxDelete] = useState(false);
   const columnHelper = createColumnHelper()
 
-  // pagination
   const [page, setPage] = useState(1);
-  const [limit] = useState(15);
+  const [limit] = useState(50);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchSubCategory = async () => {
@@ -58,29 +67,43 @@ const SubCategoryPage = () => {
 
   const columns = [
     columnHelper.accessor('name', {
-      header: "Name"
+      header: "Name",
+      cell: ({ row }) => (
+        <span className={dashboardItemTitleClass}>
+          {row.original.name}
+        </span>
+      ),
     }),
     columnHelper.accessor('image', {
       header: "Image",
       cell: ({ row }) => {
-        return <div className='flex justify-center items-center'>
-          <img src={row.original.image} alt={""} className='w-10 h-10 cursor-pointer' onClick={() => setImageURL(row.original.image)} />
-        </div>
+        return (
+          <div className='flex items-center justify-center'>
+            <button
+              type="button"
+              onClick={() => setImageURL(row.original.image)}
+              className="rounded-lg border border-[#eeeeee] p-0.5"
+            >
+              <img src={row.original.image} alt="" className="h-8 w-8 object-contain" />
+            </button>
+          </div>
+        )
       }
     }),
     columnHelper.accessor('category', {
       header: "Category",
       cell: ({ row }) => {
         return (
-          <>
-            {
-              row.original.category.map((c, index) => {
-                return (
-                  <p key={c._id}>{c.name}</p>
-                )
-              })
-            }
-          </>
+          <div className="flex flex-wrap gap-1">
+            {row.original.category.map((c) => (
+              <span
+                key={c._id}
+                className={dashboardTagMutedClass}
+              >
+                {c.name}
+              </span>
+            ))}
+          </div>
         )
       }
     }),
@@ -88,28 +111,31 @@ const SubCategoryPage = () => {
       header: "Action",
       cell: ({ row }) => {
         return (
-          <div className='flex justify-center items-center gap-3'>
-
-            <button onClick={() => {
-
-              setOpenEdit(true)
-              setEditData(row.original)
-
-            }
-            } className='text-sm  bg-amber-400 px-3 py-1 rounded hover:cursor-pointer'>
+          <div className='flex items-center justify-center gap-2'>
+            <button
+              type="button"
+              onClick={() => {
+                setOpenEdit(true)
+                setEditData(row.original)
+              }}
+              className={dashboardSecondaryBtnClass}
+            >
               <LuPencil size={14} />
             </button>
-            <button onClick={() => {
-              setOpenConfirmBoxDelete(true)
-              setDeleteSubCategory(row.original)
-            }} className='text-sm  bg-red-300 px-3 py-1 rounded hover:cursor-pointer'>
+            <button
+              type="button"
+              onClick={() => {
+                setOpenConfirmBoxDelete(true)
+                setDeleteSubCategory(row.original)
+              }}
+              className={dashboardDangerBtnClass}
+            >
               <MdDelete size={14} />
             </button>
           </div>
         )
       }
-    }
-    )
+    })
   ]
 
   const handleDelete = async () => {
@@ -131,48 +157,67 @@ const SubCategoryPage = () => {
   }
 
   return (
-    <section>
-      <div className='p-2 bg-white shadow-md flex items-center justify-between'>
-        <h2 className="font-semibold ">Category</h2>
-        <button onClick={() => setOpenAddSubCategory(true)} className='text-sm  bg-amber-200 px-3 py-1 rounded hover:cursor-pointer'>Add Sub Category</button>
-      </div>
-
-      <div className='overflow-auto w-full max-w-[90vw]'>
-        <Table data={data} column={columns} />
-      </div>
-      {/* pagination */}
-      <div className="flex justify-center items-center gap-3 mt-4">
+    <div className={dashboardPageClass}>
+      <div className="shrink-0">
+        <h1 className={dashboardTitleClass}>Sub category</h1>
         <button
-          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">Prev</button>
-        <span>
-          Page {page} of {totalPages}
-        </span>
-        <button
-          onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages}
-          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          type="button"
+          onClick={() => setOpenAddSubCategory(true)}
+          className={`mt-3 ${dashboardAddBtnClass}`}
         >
-          Next
+          + Add sub category
         </button>
       </div>
-      
-      {
-        openAddSubCategory && <UploadSubCategory close={() => setOpenAddSubCategory(false)} fetchData={fetchSubCategory} />
-      }
-      {
-        imageURL && <OpenImage url={imageURL} close={() => setImageURL("")} />
-      }
-      {
-        openEdit && <EditSubCategory data={editData} fetchData={fetchSubCategory} close={() => {
-          setOpenEdit(false)
-        }} />
-      }
-      {
-        openConfirmBoxDelete && <ConfirmBoc cancel={() => setOpenConfirmBoxDelete(false)} confirm={handleDelete} close={() => setOpenConfirmBoxDelete(false)} />
-      }
-    </section>
+
+      <div className={`mt-4 ${dashboardScrollAreaClass}`}>
+        <div className="overflow-x-auto">
+          <Table data={data} column={columns} loading={loading} />
+        </div>
+
+        {totalPages > 1 && (
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+              className={dashboardSecondaryBtnClass}
+            >
+              Prev
+            </button>
+            <span className={dashboardPaginationTextClass}>
+              Page {page} of {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
+              className={dashboardSecondaryBtnClass}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
+
+      {openAddSubCategory && (
+        <UploadSubCategory close={() => setOpenAddSubCategory(false)} fetchData={fetchSubCategory} />
+      )}
+      {imageURL && <OpenImage url={imageURL} close={() => setImageURL("")} />}
+      {openEdit && (
+        <EditSubCategory
+          data={editData}
+          fetchData={fetchSubCategory}
+          close={() => setOpenEdit(false)}
+        />
+      )}
+      {openConfirmBoxDelete && (
+        <ConfirmBoc
+          cancel={() => setOpenConfirmBoxDelete(false)}
+          confirm={handleDelete}
+          close={() => setOpenConfirmBoxDelete(false)}
+        />
+      )}
+    </div>
   )
 }
 

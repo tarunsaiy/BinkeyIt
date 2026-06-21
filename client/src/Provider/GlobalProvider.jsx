@@ -20,6 +20,10 @@ const GlobalProvider = ({ children }) => {
   const user = useSelector(state => state?.user)
   const [totalPrice, setTotalPrice] = useState(0)
   const [notDiscountTotalPrice, setNotDiscountTotalPrice] = useState(0)
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
+
+  const openCheckout = () => setCheckoutOpen(true)
+  const closeCheckout = () => setCheckoutOpen(false)
   const fetchCartItem = async () => {
     try {
       const token = localStorage.getItem("access_token");
@@ -146,7 +150,10 @@ const GlobalProvider = ({ children }) => {
       notDiscountTotalPrice,
       handleLogoutOut,
       fetchAddress,
-      fetchOrder
+      fetchOrder,
+      checkoutOpen,
+      openCheckout,
+      closeCheckout,
     }}>
       {children}
     </GlobalContext.Provider>

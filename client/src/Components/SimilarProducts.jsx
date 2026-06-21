@@ -1,17 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5'
 import AxiosToastError from '../utils/AxiosToastError'
 import Axios from '../utils/axios'
 import SummaryApi from '../common/summaryApi'
 import CardLoading from './CardLoading'
 import CardProduct from './CardProduct'
-import { useSelector } from 'react-redux'
-import validUrl from '../utils/validUrlConvert'
-import {
-  MIN_CATEGORY_PRODUCTS,
-  PRODUCT_CARD_SCROLL_WIDTH_CLASS,
-} from '../utils/productCardLayout'
+import { PRODUCT_CARD_SCROLL_WIDTH_CLASS } from '../utils/productCardLayout'
 
 const ScrollButton = ({ direction, onClick, className }) => {
   const Icon = direction === 'left' ? IoChevronBack : IoChevronForward
@@ -28,24 +22,12 @@ const ScrollButton = ({ direction, onClick, className }) => {
   )
 }
 
-const CategoryWiseProductDisplay = ({ id, name }) => {
+const SimilarProducts = ({ categoryId, categoryName, excludeProductId }) => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
   const containerRef = useRef(null)
-  const subCategoryData = useSelector((state) => state.product.subCategory)
-
-  const handleRedirectProduct = () => {
-    const subcategory = subCategoryData.find((sub) => {
-      const filterData = sub.category.some((c) => c._id == id)
-      return filterData ? true : null
-    })
-    const url = `/${validUrl(name)}-${id}/${validUrl(subcategory?.name)}-${subcategory?._id}`
-    return url
-  }
-
-  const URL = handleRedirectProduct()
 
   const updateScrollButtons = useCallback(() => {
     const container = containerRef.current
@@ -72,18 +54,21 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     })
   }
 
-  const fetchCategoryWiseProducts = async () => {
+  const fetchSimilarProducts = async () => {
+    if (!categoryId) return
+
     try {
       setLoading(true)
       const response = await Axios({
         ...SummaryApi.getProductByCategory,
-        data: {
-          id: id,
-        },
+        data: { id: categoryId },
       })
       const { data: responseData } = response
       if (responseData.success) {
-        setData(responseData.data)
+        const filtered = responseData.data.filter(
+          (product) => product._id !== excludeProductId
+        )
+        setData(filtered)
       }
     } catch (error) {
       AxiosToastError(error)
@@ -93,8 +78,8 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
   }
 
   useEffect(() => {
-    fetchCategoryWiseProducts()
-  }, [id])
+    fetchSimilarProducts()
+  }, [categoryId, excludeProductId])
 
   useEffect(() => {
     updateScrollButtons()
@@ -110,21 +95,19 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     }
   }, [loading, data.length, updateScrollButtons])
 
-  if (!loading && data.length < MIN_CATEGORY_PRODUCTS) {
+  if (!loading && data.length === 0) {
     return null
   }
 
   const loadingCardNumber = new Array(6).fill(null)
+  const title = categoryName ? `Similar products in ${categoryName}` : 'Similar products'
 
   return (
-    <div>
-      <div className="container mx-auto flex items-center justify-between gap-4 py-3">
-        <h3 className="font-bold text-lg text-slate-700">{name}</h3>
-        <Link to={URL} className="text-green-600">
-          See All
-        </Link>
+    <section className="border-t border-slate-200 bg-white">
+      <div className="container mx-auto flex items-center justify-between gap-4 py-4">
+        <h3 className="text-lg font-bold text-slate-700">{title}</h3>
       </div>
-      <div className="container mx-auto">
+      <div className="container mx-auto pb-6">
         <div className="relative">
           {canScrollLeft && (
             <ScrollButton
@@ -143,7 +126,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
           )}
 
           <div
-            className="flex items-stretch gap-2 overflow-x-auto pb-4 thin-scrollbar md:gap-2"
+            className="flex items-stretch gap-2 overflow-x-auto pb-2 thin-scrollbar md:gap-2"
             ref={containerRef}
           >
             {loading &&
@@ -153,16 +136,16 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
                 </div>
               ))}
             {!loading &&
-              data.map((p, ind) => (
-                <div key={ind} className={PRODUCT_CARD_SCROLL_WIDTH_CLASS}>
-                  <CardProduct data={p} fluid />
+              data.map((product) => (
+                <div key={product._id} className={PRODUCT_CARD_SCROLL_WIDTH_CLASS}>
+                  <CardProduct data={product} fluid />
                 </div>
               ))}
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
-export default CategoryWiseProductDisplay
+export default SimilarProducts

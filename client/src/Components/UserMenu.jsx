@@ -1,17 +1,23 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Divider from "./Divider";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Axios from "../utils/axios";
 import SummaryApi from "../common/summaryApi";
 import { logout } from "../Store/userSlice";
 import toast from "react-hot-toast";
-import { HiOutlineExternalLink } from "react-icons/hi";
 import AxiosToastError from "../utils/AxiosToastError";
 import isAdmin from "../utils/isAdmin.js";
+import {
+  dashboardMenuLinkClass,
+  dashboardMenuMetaClass,
+  dashboardMenuTitleClass,
+} from "../utils/dashboardStyles";
+
 const UserMenu = ({ close }) => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const handleLogout = async () => {
     try {
       const response = await Axios({
@@ -30,63 +36,99 @@ const UserMenu = ({ close }) => {
       AxiosToastError(error);
     }
   };
+
   const handleClose = () => {
     if (close) {
       close();
     }
-  }
+  };
+
+  const isActive = (path) => {
+    if (path === "/dashboard/myorders") {
+      return location.pathname.startsWith("/dashboard/myorders");
+    }
+    return location.pathname === path;
+  };
+
+  const formatMobile = (mobile) => {
+    if (!mobile) return "";
+    return String(mobile).trim().replace(/^\+/, "");
+  };
+
   return (
-    <div>
-      <div className="font-semibold">My account</div>
-      <div className="text-sm flex items-center gap-2">
-        <span className="max-w-52 text-ellipsis line-clamp-1">
-          {user.name || user.mobile}
-          {
-          (user.role === "ADMIN") && <span className=" text-xs font-semibold border bg-amber-100 text-amber-600 border-amber-400 rounded px-1  ml-1">"Admin"</span>
-          }
-        </span>
-        <Link to={"/dashboard/profile"} onClick={handleClose} className="hover:text-green-800">
-          <HiOutlineExternalLink size={15} />
-        </Link>
+    <div className="flex flex-col">
+      <div className="px-4 pb-2">
+        <p className={dashboardMenuTitleClass}>My Account</p>
+        {user?.mobile && (
+          <p className={`mt-0.5 ${dashboardMenuMetaClass}`}>
+            {formatMobile(user.mobile)}
+          </p>
+        )}
       </div>
-      <Divider />
 
-
-      <div className="text-sm grid gap-2">
-        {
-          
-          isAdmin(user.role) && (
-            <>
-              <Link onClick={handleClose} to={"/dashboard/category"} className="px-2 hover:bg-amber-200 py-1">
-                Category
-              </Link>
-
-              <Link onClick={handleClose} to={"/dashboard/subcategory"} className="px-2 hover:bg-amber-200 py-1">
-                SubCategory
-              </Link>
-              <Link onClick={handleClose} to={"/dashboard/upload-product"} className="px-2 hover:bg-amber-200 py-1">
-                Upload Product
-              </Link>
-              <Link onClick={handleClose} to={"/dashboard/product"} className="px-2 hover:bg-amber-200 py-1">
-                Product
-              </Link>
-            </>
-          )
-        }
-
-
-        <Link onClick={handleClose} to={"/dashboard/myorders"} className="px-2 hover:bg-amber-200 py-1">
+      <div className="flex flex-col">
+        <Link
+          onClick={handleClose}
+          to="/dashboard/myorders"
+          className={dashboardMenuLinkClass(isActive("/dashboard/myorders"))}
+        >
           My Orders
         </Link>
-        <Link onClick={handleClose} to={"/dashboard/address"} className="px-2 hover:bg-amber-200 py-1">
-          Save Address
+
+        <Link
+          onClick={handleClose}
+          to="/dashboard/address"
+          className={dashboardMenuLinkClass(isActive("/dashboard/address"))}
+        >
+          Saved Addresses
+        </Link>
+
+        {isAdmin(user.role) && (
+          <>
+            <Link
+              onClick={handleClose}
+              to="/dashboard/category"
+              className={dashboardMenuLinkClass(isActive("/dashboard/category"))}
+            >
+              Category
+            </Link>
+            <Link
+              onClick={handleClose}
+              to="/dashboard/subcategory"
+              className={dashboardMenuLinkClass(isActive("/dashboard/subcategory"))}
+            >
+              SubCategory
+            </Link>
+            <Link
+              onClick={handleClose}
+              to="/dashboard/upload-product"
+              className={dashboardMenuLinkClass(isActive("/dashboard/upload-product"))}
+            >
+              Upload Product
+            </Link>
+            <Link
+              onClick={handleClose}
+              to="/dashboard/product"
+              className={dashboardMenuLinkClass(isActive("/dashboard/product"))}
+            >
+              Product
+            </Link>
+          </>
+        )}
+
+        <Link
+          onClick={handleClose}
+          to="/dashboard/profile"
+          className={dashboardMenuLinkClass(isActive("/dashboard/profile"))}
+        >
+          Account Privacy
         </Link>
 
         <button
           onClick={handleLogout}
-          className="text-left px-2 hover:bg-amber-200 py-1"
+          className={`${dashboardMenuLinkClass(false)} w-full text-left`}
         >
-          Log out
+          Log Out
         </button>
       </div>
     </div>

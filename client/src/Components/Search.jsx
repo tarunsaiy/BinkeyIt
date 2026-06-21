@@ -25,7 +25,7 @@ const Search = () => {
   const searchText = param?.search?.slice(3);
 
   return (
-    <div className="w-full min-w-[300px] lg:min-w-[420px] h-11 lg:h-12 rounded-lg border border-gray-300 overflow-hidden flex items-center text-neutral-500 bg-gray-100 group ">
+    <div className="w-full min-w-0 lg:min-w-[420px] h-11 lg:h-12 rounded-xl overflow-hidden flex items-center text-neutral-500 bg-gray-100 group focus-within:ring-2 focus-within:ring-[#0c831f]/20">
       {isMobile && isSearchPage ? (
         <Link to={"/"} className="flex justify-center items-center h-full p-2 m-1 ">
           <FaArrowLeft size={20} />

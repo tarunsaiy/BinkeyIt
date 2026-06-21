@@ -1,32 +1,60 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { MdEdit, MdDelete } from "react-icons/md";
+import { HiOutlineHome } from 'react-icons/hi'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 import { useGlobalContext } from '../Provider/GlobalProvider'
-import EditAddressDetails from '../Components/EditAddressDetails';
-import AddAddress from '../Components/AddAddress';
+import EditAddressDetails from '../Components/EditAddressDetails'
+import AddAddress from '../Components/AddAddress'
 import SummaryApi from '../common/summaryApi'
-import AxiosToastError from '../utils/AxiosToastError';
-import Axios from '../utils/axios';
-import toast from 'react-hot-toast';
+import AxiosToastError from '../utils/AxiosToastError'
+import Axios from '../utils/axios'
+import toast from 'react-hot-toast'
+import {
+  dashboardAddBtnClass,
+  dashboardBodyTextClass,
+  dashboardItemTitleClass,
+  dashboardPageClass,
+  dashboardScrollAreaClass,
+  dashboardTitleClass,
+} from '../utils/dashboardStyles'
+
+const formatAddressLine = (address) =>
+  [address.address_line, address.city, address.state, address.country, address.pincode]
+    .filter(Boolean)
+    .join(', ')
+
 const Address = () => {
-  const addressList = useSelector(state => state.addresses.addressList)
+  const addressList = useSelector((state) => state.addresses.addressList)
+  const user = useSelector((state) => state.user)
   const [openAddress, setOpenAddress] = useState(false)
-  const [OpenEdit, setOpenEdit] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
   const [editData, setEditData] = useState({})
+  const [openMenuId, setOpenMenuId] = useState(null)
   const { fetchAddress } = useGlobalContext()
 
-  const handleDisableAddress = async(id)=>{
+  useEffect(() => {
+    if (!openMenuId) return
+
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('[data-address-menu]')) {
+        setOpenMenuId(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [openMenuId])
+
+  const handleDisableAddress = async (id) => {
     try {
       const response = await Axios({
         ...SummaryApi.disableAddress,
-        data : {
-          _id : id
-        }
+        data: { _id: id },
       })
-      if(response.data.success){
-        toast.success("Address Remove")
-        if(fetchAddress){
+      if (response.data.success) {
+        toast.success('Address removed')
+        setOpenMenuId(null)
+        if (fetchAddress) {
           fetchAddress()
         }
       }
@@ -34,60 +62,87 @@ const Address = () => {
       AxiosToastError(error)
     }
   }
+
+  const activeAddresses = addressList.filter((address) => address.status)
+
   return (
-    <div className=''>
-      <div className='bg-white shadow-lg px-2 py-2 flex justify-between gap-4 items-center '>
-        <h2 className='font-semibold text-ellipsis line-clamp-1'>Address</h2>
-        <button onClick={() => setOpenAddress(true)} className='border border-primary-200 text-primary-200 px-3 hover:bg-primary-200 hover:text-black py-1 rounded-full'>
-          Add Address
+    <div className={dashboardPageClass}>
+      <div className="shrink-0">
+        <h1 className={dashboardTitleClass}>My addresses</h1>
+        <button
+          type="button"
+          onClick={() => setOpenAddress(true)}
+          className={`mt-3 ${dashboardAddBtnClass}`}
+        >
+          + Add new address
         </button>
       </div>
-      <div className='bg-blue-50 p-2 grid gap-4'>
-        {
-          addressList.map((address, index) => {
-            return (
-              <div className={`border rounded p-3 flex gap-3 bg-white ${!address.status && 'hidden'}`}>
-                <div className='w-full'>
-                  <p>{address.address_line}</p>
-                  <p>{address.city}</p>
-                  <p>{address.state}</p>
-                  <p>{address.country} - {address.pincode}</p>
-                  <p>{address.mobile}</p>
-                </div>
 
-                <div className=' grid gap-10'>
-                  <button onClick={() => {
-                    setOpenEdit(true)
-                    setEditData(address)
-                  }} className='bg-green-200 p-1 rounded  hover:text-white hover:bg-green-600'>
-                    <MdEdit />
+      <div className={`mt-4 ${dashboardScrollAreaClass}`}>
+        {activeAddresses.map((address) => (
+          <div
+            key={address._id}
+            className="flex items-start gap-3 border-b border-[#eeeeee] py-4 last:border-b-0"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-[#FFF8E1]">
+              <HiOutlineHome className="text-[#C9A227]" size={20} />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className={dashboardItemTitleClass}>
+                {user?.name || address.mobile}
+              </p>
+              <p className={`mt-1 ${dashboardBodyTextClass} text-[#666666]`}>
+                {formatAddressLine(address)}
+              </p>
+            </div>
+
+            <div className="relative shrink-0" data-address-menu>
+              <button
+                type="button"
+                onClick={() =>
+                  setOpenMenuId((current) =>
+                    current === address._id ? null : address._id
+                  )
+                }
+                className="rounded p-1 text-[#666666] hover:bg-[#f3f3f3]"
+                aria-label="Address options"
+              >
+                <BsThreeDotsVertical size={18} />
+              </button>
+
+              {openMenuId === address._id && (
+                <div className="absolute right-0 top-8 z-10 min-w-[120px] overflow-hidden rounded-lg border border-[#eeeeee] bg-white shadow-md">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditData(address)
+                      setOpenEdit(true)
+                      setOpenMenuId(null)
+                    }}
+                    className="block w-full px-4 py-2.5 text-left text-xs font-semibold text-[#1c1c1c] hover:bg-[#f8f8f8]"
+                  >
+                    Edit
                   </button>
-                  <button onClick={() =>
-                    handleDisableAddress(address._id)
-                  } className='bg-red-200 p-1 rounded hover:text-white hover:bg-red-600'>
-                    <MdDelete size={20} />
+                  <button
+                    type="button"
+                    onClick={() => handleDisableAddress(address._id)}
+                    className="block w-full px-4 py-2.5 text-left text-xs font-semibold text-red-600 hover:bg-[#f8f8f8]"
+                  >
+                    Delete
                   </button>
                 </div>
-              </div>
-            )
-          })
-        }
-        <div onClick={() => setOpenAddress(true)} className='h-16 bg-blue-50 border-2 border-dashed flex justify-center items-center cursor-pointer'>
-          Add address
-        </div>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
 
-      {
-        openAddress && (
-          <AddAddress close={() => setOpenAddress(false)} />
-        )
-      }
+      {openAddress && <AddAddress close={() => setOpenAddress(false)} />}
 
-      {
-        OpenEdit && (
-          <EditAddressDetails data={editData} close={() => setOpenEdit(false)} />
-        )
-      }
+      {openEdit && (
+        <EditAddressDetails data={editData} close={() => setOpenEdit(false)} />
+      )}
     </div>
   )
 }

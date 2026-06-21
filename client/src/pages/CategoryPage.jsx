@@ -11,6 +11,17 @@ import SummaryApi from '../common/summaryApi';
 import EditCategory from '../Components/EditCategory';
 import ConfirmBoc from '../Components/ConfirmBoc';
 import { useSelector } from 'react-redux';
+import {
+  dashboardAddBtnClass,
+  dashboardCardClass,
+  dashboardDangerBtnClass,
+  dashboardPageClass,
+  dashboardScrollAreaClass,
+  dashboardSecondaryBtnClass,
+  dashboardItemTitleClass,
+  dashboardTitleClass,
+} from '../utils/dashboardStyles';
+
 const CategoryPage = () => {
     const [openUploadCategory, setOpenUploadCategory] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -30,7 +41,6 @@ const CategoryPage = () => {
     }, [])
 
     const fetchCategory = async () => {
-        // to load all the categorys
         try {
             setLoading(true);
             const response = await Axios({
@@ -48,7 +58,6 @@ const CategoryPage = () => {
         }
     }
 
-    
     const handleDelete = async() => {
         try {
             const response = await Axios({
@@ -62,7 +71,7 @@ const CategoryPage = () => {
                 setOpenConfirmBoxDelete(false);
             }
             else {
-                toast.error("pi");
+                toast.error("Failed to delete category");
             }
         }
         catch(error) {
@@ -72,64 +81,87 @@ const CategoryPage = () => {
             setLoading(false);
         }
     }
+
     return (
-        <section>
-            <div className='p-2 bg-white shadow-md flex items-center justify-between'>
-                <h2 className="font-semibold ">Category</h2>
-                <button onClick={() => setOpenUploadCategory(true)} className='text-sm  bg-amber-200 px-3 py-1 rounded hover:cursor-pointer'>Add Category</button>
-            </div>
-            {
-                !categoryData[0] && !loading && (
-                    <NoData />
-                )
-            }
-            <div className='p-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 '>
-                {
-                    categoryData.map((category, index) => {
-                        return (
-                            <div className='w-32 my-2  h-auto  bg-[#edf4ff] rounded shadow-md' key={category._id}>
-                              <img src={category.image} alt={category.name} className='w-52 object-scale-down' />
-                              <div className='flex items-center gap-2'>
-                                <button onClick={()=> {
-                                    setOpenEdit(true)
-                                    setEditData(category)
-                                    }} className='flex-1 bg-amber-400 cursor-pointer rounded font-medium'>
-                                    Edit
-                                </button>
-                                <button onClick={()=>{
-                                    setOpenConfirmBoxDelete(true)
-                                    setDeleteCategory(category)
-                                }} className='flex-1 cursor-pointer bg-red-200 rounded font-medium'>
-                                    Delete
-                                </button>
-                              </div>
-                            </div>
-                        )
-                    })
-                }
+        <div className={dashboardPageClass}>
+            <div className="shrink-0">
+                <h1 className={dashboardTitleClass}>Category</h1>
+                <button
+                    type="button"
+                    onClick={() => setOpenUploadCategory(true)}
+                    className={`mt-3 ${dashboardAddBtnClass}`}
+                >
+                    + Add category
+                </button>
             </div>
 
-            {
-                loading && (
-                    <Loading />
-                )
-            }
-            {
-                openUploadCategory && (
-                    <UploadCategory fetchData={fetchCategory} close={() => setOpenUploadCategory(false)} />
-                )
-            }
-            {
-                openEdit && (
-                    <EditCategory data={editData} fetchData={fetchCategory} close={()=>setOpenEdit(false)}/>
-                )
-            }
-            {
-                openConfirmBoxDelete && (
-                    <ConfirmBoc close={()=>setOpenConfirmBoxDelete(false)} cancel={() => setOpenConfirmBoxDelete(false)} confirm={handleDelete}/>
-                )
-            }
-        </section>
+            <div className={`mt-4 ${dashboardScrollAreaClass}`}>
+                {loading && (
+                    <div className="flex justify-center py-8">
+                        <Loading color="green" size="w-8 h-8" />
+                    </div>
+                )}
+
+                {!categoryData[0] && !loading && (
+                    <div className="flex h-full min-h-[20rem] items-center justify-center">
+                        <NoData />
+                    </div>
+                )}
+
+                {!loading && categoryData.length > 0 && (
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                        {categoryData.map((category) => (
+                            <div className={dashboardCardClass} key={category._id}>
+                                <div className="flex aspect-square items-center justify-center bg-[#fafafa] p-3">
+                                    <img
+                                        src={category.image}
+                                        alt={category.name}
+                                        className="h-full w-full object-contain"
+                                    />
+                                </div>
+                                <div className="border-t border-[#eeeeee] px-3 py-2">
+                                    <p className={`truncate ${dashboardItemTitleClass}`}>
+                                        {category.name}
+                                    </p>
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setOpenEdit(true)
+                                                setEditData(category)
+                                            }}
+                                            className={`flex-1 ${dashboardSecondaryBtnClass}`}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setOpenConfirmBoxDelete(true)
+                                                setDeleteCategory(category)
+                                            }}
+                                            className={`flex-1 ${dashboardDangerBtnClass}`}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {openUploadCategory && (
+                <UploadCategory fetchData={fetchCategory} close={() => setOpenUploadCategory(false)} />
+            )}
+            {openEdit && (
+                <EditCategory data={editData} fetchData={fetchCategory} close={()=>setOpenEdit(false)}/>
+            )}
+            {openConfirmBoxDelete && (
+                <ConfirmBoc close={()=>setOpenConfirmBoxDelete(false)} cancel={() => setOpenConfirmBoxDelete(false)} confirm={handleDelete}/>
+            )}
+        </div>
     )
 }
 

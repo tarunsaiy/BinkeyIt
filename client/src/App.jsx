@@ -1,108 +1,94 @@
-import { Router, Route, Routes, BrowserRouter, Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import "./App.css";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import fetchUserDetails from "./utils/fetchUserDetails";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "./Store/userSlice";
 import { setAllCategory, setAllSubCategory, setLoadingCategory } from "./Store/productSlice";
-import { useState } from "react";
 import Axios from "./utils/axios.js";
 import SummaryApi from "./common/summaryApi";
-import AxiosToastError from "./utils/AxiosToastError"
-import { handleAddItemCart } from "./Store/CartProduct.js";
+import AxiosToastError from "./utils/AxiosToastError";
 import GlobalProvider from "./Provider/GlobalProvider.jsx";
-import { useSelector } from "react-redux";
-function App() {
+import CheckOutDisplay from "./Components/CheckOutDisplay.jsx";
+import { useGlobalContext } from "./Provider/GlobalProvider.jsx";
 
-
-  const dispatch = useDispatch()
-  const fetchUser = async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) return;
-    const userData = await fetchUserDetails()
-    dispatch(setUserDetails(userData?.data))
-  }
-
-  const fetchCategory = async () => {
-    // to load all the categorys
-    try {
-      // setLoading(true);
-      dispatch(setLoadingCategory(true))
-
-      const response = await Axios({
-        ...SummaryApi.getCategory
-      })
-      const { data: responseData } = response;
-      if (responseData.success) {
-        dispatch(setAllCategory(responseData.data))
-        // setCategoryData(responseData.data)
-      }
-    } catch (error) {
-      AxiosToastError(error);
-    }
-    finally {
-      // setLoading(false);
-      dispatch(setLoadingCategory(false))
-    }
-  }
-
-  const fetchSubCategory = async () => {
-    // to load all the categorys
-    try {
-
-      const response = await Axios({
-        ...SummaryApi.getSubCategory
-      })
-      const { data: responseData } = response;
-
-      if (responseData.success) {
-        dispatch(setAllSubCategory(responseData.data))
-
-      }
-    } catch (error) {
-      AxiosToastError(error);
-    }
-
-  }
-  const fetchCartItem = async () => {
-    const token = localStorage.getItem("access_token");
-    if (!token) return;
-    try {
-      const response = await Axios({
-        ...SummaryApi.getCartItem
-      })
-      const { data: responseData } = response;
-      if (responseData.success) {
-        dispatch(handleAddItemCart(responseData.data))
-      }
-    } catch (error) {
-      AxiosToastError(error);
-    }
-  }
+function AppContent() {
+  const { checkoutOpen, closeCheckout } = useGlobalContext();
+  const location = useLocation();
 
   useEffect(() => {
-    fetchUser()
-    fetchCategory();
-    fetchSubCategory();
-    // fetchCartItem();
-  }, [])
-
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
-
-    <GlobalProvider>
-
+    <>
       <Header />
       <main className="min-h-[78vh]">
         <Outlet />
       </main>
       <Footer />
       <Toaster />
-    </GlobalProvider>
+      {checkoutOpen && <CheckOutDisplay close={closeCheckout} />}
+    </>
+  );
+}
 
+function App() {
+  const dispatch = useDispatch();
+
+  const fetchUser = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+    const userData = await fetchUserDetails();
+    dispatch(setUserDetails(userData?.data));
+  };
+
+  const fetchCategory = async () => {
+    try {
+      dispatch(setLoadingCategory(true));
+
+      const response = await Axios({
+        ...SummaryApi.getCategory,
+      });
+      const { data: responseData } = response;
+      if (responseData.success) {
+        dispatch(setAllCategory(responseData.data));
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    } finally {
+      dispatch(setLoadingCategory(false));
+    }
+  };
+
+  const fetchSubCategory = async () => {
+    try {
+      const response = await Axios({
+        ...SummaryApi.getSubCategory,
+      });
+      const { data: responseData } = response;
+
+      if (responseData.success) {
+        dispatch(setAllSubCategory(responseData.data));
+      }
+    } catch (error) {
+      AxiosToastError(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+    fetchCategory();
+    fetchSubCategory();
+  }, []);
+
+  return (
+    <GlobalProvider>
+      <AppContent />
+    </GlobalProvider>
   );
 }
 

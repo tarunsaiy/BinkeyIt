@@ -4,7 +4,7 @@ export default {
     extend: {
       
       fontFamily: {
-        sans: ["Poppins", "sans-serif"], // set Poppins as default
+        sans: ["Montserrat", "sans-serif"],
       },
     },
   },

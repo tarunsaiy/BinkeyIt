@@ -11,17 +11,14 @@ import imageEmpty from '../assets/Binkeyit Full Stack Ecommerce/empty_cart.webp'
 import toast from 'react-hot-toast';
 const CartPage = () => {
   
-    const { notDiscountTotalPrice, totalPrice ,totalQty} = useGlobalContext()
+    const { notDiscountTotalPrice, totalPrice ,totalQty, openCheckout} = useGlobalContext()
     const cartItem  = useSelector(state => state.cartItem.cart)
     const user = useSelector(state => state.user)
     const navigate = useNavigate()
 
     const redirectToCheckoutPage = ()=>{
         if(user?._id){
-            navigate("/checkout")
-            if(close){
-                close()
-            }
+            openCheckout()
             return
         }
         toast("Please Login")

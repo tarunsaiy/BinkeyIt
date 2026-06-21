@@ -11,6 +11,7 @@ import noDataImage from '../assets/Binkeyit Full Stack Ecommerce/nothing here ye
 import AxiosToastError from "../utils/AxiosToastError";
 import CardLoading from '../Components/CardLoading'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { PRODUCT_GRID_CLASS } from '../utils/productCardLayout'
 const SearchPage = () => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -73,11 +74,11 @@ const SearchPage = () => {
           hasMore={true}
           next={handleFetchMore}
         >
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 py-4 gap-2'>
+          <div className={`${PRODUCT_GRID_CLASS} py-4`}>
             {
               data.map((p, index) => {
                 return (
-                  <CardProduct data={p} key={p?._id + "searchProduct" + index} />
+                  <CardProduct data={p} key={p?._id + "searchProduct" + index} fluid />
                 )
               })
             }
@@ -87,7 +88,7 @@ const SearchPage = () => {
               loading && (
                 loadingArrayCard.map((_, index) => {
                   return (
-                    <CardLoading key={"loadingsearchpage" + index} />
+                    <CardLoading key={"loadingsearchpage" + index} fluid />
                   )
                 })
               )

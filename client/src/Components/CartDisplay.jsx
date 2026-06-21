@@ -1,130 +1,79 @@
 import React from 'react'
-import { IoClose } from 'react-icons/io5'
-import { Link, redirect, useNavigate } from 'react-router-dom'
+import { IoArrowBack, IoChevronForward } from 'react-icons/io5'
+import { useNavigate } from 'react-router-dom'
 import { useGlobalContext } from '../Provider/GlobalProvider'
-import { FaCaretRight } from "react-icons/fa";
 import { useSelector } from 'react-redux'
-import AddToCartButton from '../Components/AddToCartButton';
-import { pricewithDiscount } from '../utils/PriceWithDiscount'
-import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees'
-import imageEmpty from '../assets/Binkeyit Full Stack Ecommerce/empty_cart.webp'
-import toast from 'react-hot-toast';
-const CartDisplay = ({ close }) => {
+import CartOrderSummary from './CartOrderSummary'
+import { formatOrderPrice, getOrderGrandTotal } from '../utils/orderCharges'
 
-  const { notDiscountTotalPrice, totalPrice, totalQuantity } = useGlobalContext()
-  const cartItem = useSelector(state => state.cartItem.cart)
-  const user = useSelector(state => state.user)
+const CartDisplay = ({ close }) => {
+  const { notDiscountTotalPrice, totalPrice, totalQuantity, openCheckout } = useGlobalContext()
+  const cartItem = useSelector((state) => state.cartItem.cart)
+  const user = useSelector((state) => state.user)
   const navigate = useNavigate()
+
+  if (!cartItem.length || !totalQuantity) {
+    return null
+  }
+
+  const grandTotal = getOrderGrandTotal(totalPrice)
 
   const redirectToCheckoutPage = () => {
     if (user?._id) {
-      navigate("/checkout")
-      if (close) {
-        close()
-      }
+      openCheckout()
+      if (close) close()
       return
     }
-    redirectToLogin()
+    navigate('/login')
+    if (close) close()
   }
-  const redirectToLogin = () => {
-    navigate("/login")
-    if (close) {
-      close()
-    }
-  }
+
   return (
-    <section className='bg-neutral-900/60 fixed top-0 bottom-0 right-0 left-0 z-50'>
-      <div className='bg-white w-full max-w-sm min-h-screen max-h-screen ml-auto'>
-        <div className='flex items-center p-4 shadow-md gap-3 justify-between'>
-          <h2 className='font-semibold'>Cart</h2>
-          <button onClick={close} className=''>
-            <IoClose size={25} />
+    <section className="fixed inset-0 z-50 bg-black/50">
+      <div className="ml-auto flex h-full w-full max-w-[420px] flex-col bg-[#f8f8f8]">
+        <div className="flex shrink-0 items-center gap-3 border-b border-[#eeeeee] bg-white px-4 py-3.5">
+          <button
+            type="button"
+            onClick={close}
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#1c1c1c] hover:bg-[#f3f3f3]"
+            aria-label="Close cart"
+          >
+            <IoArrowBack size={20} />
+          </button>
+          <h2 className="text-sm font-semibold text-[#1c1c1c]">My Cart</h2>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto thin-scrollbar p-3">
+          <CartOrderSummary
+            cartItems={cartItem}
+            totalQuantity={totalQuantity}
+            notDiscountTotalPrice={notDiscountTotalPrice}
+            totalPrice={totalPrice}
+          />
+        </div>
+
+        <div className="shrink-0 border-t border-[#eeeeee] bg-white p-3">
+          <button
+            type="button"
+            onClick={redirectToCheckoutPage}
+            className="flex w-full items-center justify-between rounded-xl bg-[#0C831F] px-4 py-3.5 text-white"
+          >
+            <div className="text-left">
+              <p className="text-base font-semibold leading-none">
+                {formatOrderPrice(grandTotal)}
+              </p>
+              <p className="mt-0.5 text-[9px] font-semibold uppercase tracking-wide opacity-90">
+                Total
+              </p>
+            </div>
+            <span className="flex items-center gap-1 text-xs font-semibold">
+              {user?._id ? 'Proceed' : 'Login to Proceed'}
+              <IoChevronForward size={16} />
+            </span>
           </button>
         </div>
-
-        <div className='min-h-[75vh] lg:min-h-[80vh] h-full max-h-[calc(100vh-150px)] bg-slate-100 p-2 flex flex-col gap-4'>
-          {cartItem.length > 0 ? (
-            <>
-              <div className='flex items-center justify-between px-4 py-2 bg-blue-100 text-blue-500 rounded-full'>
-                <p>Your total savings</p>
-                <p>{DisplayPriceInRupees(notDiscountTotalPrice - totalPrice)}</p>
-              </div>
-              <div className='bg-white rounded-lg p-4 grid gap-5 overflow-auto'>
-                {cartItem.map((item) => (
-                  <div key={item._id + "cartItemDisplay"} className='flex w-full gap-4 items-center'>
-                    <div className='w-16 h-16 min-h-16 min-w-16  rounded'>
-                      <img src={item.productId.image[0]} className='object-scale-down' />
-                    </div>
-                    <div className='w-full max-w-sm text-xs flex flex-col gap-1'>
-                      <p className='text-xs text-ellipsis line-clamp-2'>{item.productId.name}</p>
-                      <p className='text-neutral-400'>{item.productId.unit}</p>
-                      <p className='font-semibold'>
-                        {DisplayPriceInRupees(pricewithDiscount(item.productId.price, item.productId.discount))}
-                      </p>
-                    </div>
-                    <div>
-                      <AddToCartButton data={item.productId} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className='bg-white p-4 flex flex-col gap-1'>
-                <h3 className='font-semibold'>Bill details</h3>
-                <div className='flex gap-4 justify-between ml-1'>
-                  <p>Items total</p>
-                  <p className='flex items-center gap-2'>
-                    <span className='line-through text-neutral-400'>{DisplayPriceInRupees(notDiscountTotalPrice)}</span>
-                    <span>{DisplayPriceInRupees(totalPrice)}</span>
-                  </p>
-                </div>
-                <div className='flex gap-4 justify-between ml-1'>
-                  <p>Quantity total</p>
-                  <p className='flex items-center gap-2'>{totalQuantity} item</p>
-                </div>
-                <div className='flex gap-4 justify-between ml-1'>
-                  <p>Delivery Charge</p>
-                  <p className='flex items-center gap-2'>Free</p>
-                </div>
-                <div className='font-semibold flex items-center justify-between gap-4 text-xl bg-slate-200 px-3 py-2 font-bold rounded mt-5'>
-                  <p>Grand total</p>
-                  <p className='font-bold'>{DisplayPriceInRupees(totalPrice)}</p>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className='bg-white flex flex-col justify-center items-center'>
-              <img src={imageEmpty} className='w-full h-full object-scale-down' />
-              {
-                user._id ? (
-
-                  <div onClick={close} className='block bg-green-600 px-4 py-2 text-white rounded'>Shop Now</div>
-                ) : (
-                  <div onClick={redirectToLogin} className='block bg-green-600 px-4 py-2 text-white rounded'>Login</div>
-
-                )
-              }
-            </div>
-          )}
-        </div>
-
-        {
-          cartItem[0] && (
-            <div className='p-2'>
-              <div className='bg-green-700 text-neutral-100 px-4 font-bold text-base py-4 static bottom-3 rounded flex items-center gap-4 justify-between'>
-                <div>
-                  {DisplayPriceInRupees(totalPrice)}
-                </div>
-                <button onClick={redirectToCheckoutPage} className='flex items-center gap-1 cursor-pointer'>
-                  Proceed
-                  <span><FaCaretRight /></span>
-                </button>
-              </div>
-            </div>
-          )
-        }
-
       </div>
-    </section >
+    </section>
   )
 }
 

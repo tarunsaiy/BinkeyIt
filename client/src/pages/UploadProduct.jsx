@@ -11,9 +11,20 @@ import AddField from '../Components/AddField'
 import Axios from '../utils/axios'
 import SummaryApi from '../common/summaryApi'
 import toast from "react-hot-toast";
-import successSound from '../assets/success-sound.mp3';
-import  AxiosToastError from '../utils/AxiosToastError.js'
-import playSound from '../utils/playsound.js'
+import AxiosToastError from '../utils/AxiosToastError.js'
+import {
+  dashboardAddBtnClass,
+  dashboardInputClass,
+  dashboardLabelClass,
+  dashboardPageClass,
+  dashboardPrimaryBtnClass,
+  dashboardScrollAreaClass,
+  dashboardSelectClass,
+  dashboardTagClass,
+  dashboardTextareaClass,
+  dashboardTitleClass,
+} from '../utils/dashboardStyles'
+
 const UploadProduct = () => {
     const allCategory = useSelector((state) => state.product.allCategory)
     const [data, setData] = useState({
@@ -28,7 +39,7 @@ const UploadProduct = () => {
         discount: "",
         more_details: {}
     })
-    
+
     const [imageLoading, setImageLoading] = useState(false)
     const [viewImageURL, setViewImageURL] = useState('')
     const [selectCategory, setSelectCategory] = useState('')
@@ -36,15 +47,15 @@ const UploadProduct = () => {
     const allSubCategory = useSelector((state) => state.product.subCategory)
     const [openAddFields, setOpenAddFields] = useState(false)
     const [fieldName, setFieldName] = useState('')
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setData(prev => {
-            return {
-                ...prev,
-                [name]: value
-            }
-        })
+        setData(prev => ({
+            ...prev,
+            [name]: value
+        }))
     }
+
     const handleUploadImage = async (e) => {
         const file = e.target.files[0]
         if (!file) return;
@@ -52,51 +63,45 @@ const UploadProduct = () => {
         const response = await uploadImage(file)
         const { data: ImageResponse } = response
         setImageLoading(false);
-        setData(prev => {
-            return {
-                ...prev,
-                image: [...prev.image, ImageResponse.data.url]
-            }
-        })
+        setData(prev => ({
+            ...prev,
+            image: [...prev.image, ImageResponse.data.url]
+        }))
     }
-    const handleDeleteImage = async (ind) => {
-        data.image.splice(ind, 1)
-        setData(prev => {
-            return {
-                ...prev,
-            }
-        })
+
+    const handleDeleteImage = (ind) => {
+        setData(prev => ({
+            ...prev,
+            image: prev.image.filter((_, index) => index !== ind)
+        }))
     }
-    const handleDeleteCategory = async (ind) => {
-        data.category.splice(ind, 1)
-        setData(prev => {
-            return {
-                ...prev,
-            }
-        })
+
+    const handleDeleteCategory = (ind) => {
+        setData(prev => ({
+            ...prev,
+            category: prev.category.filter((_, index) => index !== ind)
+        }))
     }
-    const handleDeleteSubCategory = async (ind) => {
-        data.subCategory.splice(ind, 1)
-        setData(prev => {
-            return {
-                ...prev,
-                subCategory: [...prev.subCategory]
-            }
-        })
+
+    const handleDeleteSubCategory = (ind) => {
+        setData(prev => ({
+            ...prev,
+            subCategory: prev.subCategory.filter((_, index) => index !== ind)
+        }))
     }
+
     const handleAddField = () => {
-        setData((prev) => {
-            return {
-                ...prev,
-                more_details: {
-                    ...prev.more_details,
-                    [fieldName]: ""
-                }
+        setData((prev) => ({
+            ...prev,
+            more_details: {
+                ...prev.more_details,
+                [fieldName]: ""
             }
-        })
+        }))
         setFieldName('')
         setOpenAddFields(false)
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -109,7 +114,6 @@ const UploadProduct = () => {
             }
             if (response.data.success) {
                 toast.success(response.data.message);
-                // playSound(successSound)
                 setData({
                     name: "",
                     image: [],
@@ -122,316 +126,273 @@ const UploadProduct = () => {
                     discount: "",
                     more_details: {}
                 });
-                
             }
         }
         catch (error) {
             AxiosToastError(error);
         }
-
     }
-   
+
     return (
-        <section>
-            <div className='p-2 bg-white shadow-md flex items-center justify-between'>
-                <h2 className="font-semibold ">Upload Product</h2>
+        <div className={dashboardPageClass}>
+            <div className="shrink-0">
+                <h1 className={dashboardTitleClass}>Upload product</h1>
             </div>
-            <div className='grid p-3 '>
-                <form className='grid gap-3 ' onSubmit={handleSubmit}>
-                    <div className='grid gap-1'>
-                        <label htmlFor="name">Name</label>
-                        <input type="text"
-                            placeholder='Enter product name'
+
+            <div className={`mt-4 ${dashboardScrollAreaClass}`}>
+                <form className="grid max-w-2xl gap-4" onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="name" className={dashboardLabelClass}>Name</label>
+                        <input
+                            type="text"
+                            placeholder="Enter product name"
                             value={data.name}
-                            name='name'
-                            id='name'
+                            name="name"
+                            id="name"
                             onChange={handleChange}
                             required
-                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
+                            className={dashboardInputClass}
+                        />
                     </div>
-                    <div className='grid gap-1'>
-                        <label htmlFor="description">Descrption</label>
-                        <textarea type="text"
-                            id='description'
-                            placeholder='Enter product description'
+
+                    <div>
+                        <label htmlFor="description" className={dashboardLabelClass}>Description</label>
+                        <textarea
+                            id="description"
+                            placeholder="Enter product description"
                             value={data.description}
-                            name='description'
+                            name="description"
                             onChange={handleChange}
                             required
                             rows={3}
-                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
+                            className={dashboardTextareaClass}
+                        />
                     </div>
-                    <div>
-                        <p>Image</p>
-                        <div>
-                            <label htmlFor='productImage' className='bg-slate-100 h-24 outline-none border border-transparent focus-within:border-amber-300 rounded flex justify-center items-center cursor-pointer'>
-                                <div className='flex flex-col items-center'>
-                                    {
-                                        imageLoading ? <Loading /> : (
-                                            <>
-                                                <FaCloudUploadAlt size={30} opacity={0.3} />
-                                                <p>Upload Image</p>
-                                            </>
-                                        )
-                                    }
 
-                                </div>
-                                <input type="file" id='productImage' className='hidden' onChange={handleUploadImage} accept='image/*' />
-                            </label>
-                            {
-                                data.image.length > 0 && (
-                                    <div className='my-4 bg-slate-100 flex gap-2 p-2'>
-                                        {
-                                            data.image.map((img, ind) => {
-                                                return (
-                                                    <div key={ind} className='h-20 w-20 min-w-20 bg-slate-100 relative border border-amber-300 rounded p-1'>
-                                                        <img src={img} alt="Image" className='h-full w-full object-scale-down cursor-pointer' onClick={() => setViewImageURL(img)} />
-                                                        <div onClick={() => handleDeleteImage(ind)} className='absolute top-1 right-0 hover:cursor-pointer bg-black rounded hover:bg-white hover:border'>
-                                                            <MdDelete size={18} color='limegreen' />
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })
-                                        }
+                    <div>
+                        <p className={dashboardLabelClass}>Image</p>
+                        <label
+                            htmlFor="productImage"
+                            className="flex h-24 cursor-pointer items-center justify-center rounded-xl border border-dashed border-[#eeeeee] bg-[#fafafa] hover:border-[#0C831F]"
+                        >
+                            <div className="flex flex-col items-center text-[#666666]">
+                                {imageLoading ? (
+                                    <Loading color="green" size="w-6 h-6" />
+                                ) : (
+                                    <>
+                                        <FaCloudUploadAlt size={28} className="opacity-40" />
+                                        <p className="mt-1 text-xs">Upload image</p>
+                                    </>
+                                )}
+                            </div>
+                            <input type="file" id="productImage" className="hidden" onChange={handleUploadImage} accept="image/*" />
+                        </label>
+
+                        {data.image.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                {data.image.map((img, ind) => (
+                                    <div key={ind} className="relative h-20 w-20 rounded-xl border border-[#eeeeee] bg-[#fafafa] p-1">
+                                        <img
+                                            src={img}
+                                            alt="Product"
+                                            className="h-full w-full cursor-pointer object-contain"
+                                            onClick={() => setViewImageURL(img)}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteImage(ind)}
+                                            className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white"
+                                        >
+                                            <MdDelete size={12} />
+                                        </button>
                                     </div>
-                                )
-                            }
-
-                        </div>
-
-                    </div>
-                    <div>
-                        <label htmlFor="">Category</label>
-                        <div>
-                            <select name="" id="" className='bg-slate-100 border border-blue-50 w-full p-2 rounded' value={selectCategory}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const category = allCategory.find(cat => cat?._id === value)
-                                    if (data.category.some(obj => obj._id === category._id)) return;
-                                    setData(prev => {
-                                        return {
-                                            ...prev,
-                                            category: [...prev.category, category]
-                                        }
-                                    })
-                                    setSelectCategory('')
-                                }}>
-                                <option value="">Select Category</option>
-                                {
-                                    allCategory.map((cat, ind) => {
-                                        return (
-                                            <option key={ind + "categ"} value={cat?._id}>{cat.name}</option>
-                                        )
-                                    })
-                                }
-                            </select>
-                            <div className='flex flex-wrap gap-3 mt-3'>
-                                {
-                                    data.category.map((cat, ind) => {
-                                        return (
-                                            <div
-                                                key={cat._id}
-                                                className="text-sm flex items-center justify-center gap-1 bg-red-500 rounded text-red-50 font-semibold p-0.5 relative overflow-hidden"
-                                            >
-                                                <p key={ind + "cat"}>{cat.name}</p>
-                                                <div className='cursor-pointer' onClick={() => handleDeleteCategory(ind)}>
-                                                    <IoClose />
-                                                </div>
-
-                                                {/* Shine overlay */}
-                                                <span
-                                                    className="absolute top-0 left-[-50%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/60 to-transparent transform -skew-x-12 pointer-events-none rounded"
-                                                    style={{
-                                                        animation: "shine 2s ease-in-out infinite",
-                                                    }}
-                                                ></span>
-                                                {/* Inline keyframes */}
-                                                <style>
-                                                    {`
-                                                        @keyframes shine {
-                                                            0% { left: -50%; }
-                                                            100% { left: 100%; }
-                                                        }
-                                                    `}
-                                                </style>
-                                            </div>
-
-                                        )
-                                    })
-                                }
+                                ))}
                             </div>
-                        </div>
+                        )}
                     </div>
+
                     <div>
-                        <label htmlFor="">Sub Category</label>
-                        <div>
-                            <select name="" id="" className='bg-slate-100 border border-blue-50 w-full p-2 rounded' value={selectSubCategory}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    const subCategorydetails = allSubCategory.find(cat => cat?._id === value)
-
-                                    setData(prev => {
-                                        if (!prev.subCategory.some(sc => sc._id === subCategorydetails._id)) {
-                                            return {
-                                                ...prev,
-                                                subCategory: [...prev.subCategory, subCategorydetails]
-                                            }
-                                        }
-                                        return prev
-
-                                    })
-                                    setSelectSubCategory('')
-                                }}>
-                                <option value="">Select Sub Category</option>
-                                {
-                                    allSubCategory?.map((cat, ind) => {
-                                        return (
-                                            <option key={ind + "categ"} value={cat?._id}>{cat.name}</option>
-                                        )
-                                    })
-                                }
-                            </select>
-                            <div className='flex flex-wrap gap-3 mt-3'>
-                                {
-                                    data.subCategory?.map((cat, ind) => {
-                                        return (
-                                            <div
-                                                key={cat._id + "subcat"}
-                                                className="text-sm flex items-center justify-center gap-1 bg-red-500 rounded text-red-50 font-semibold p-0.5 relative overflow-hidden"
-                                            >
-                                                <p key={ind + "subcat"}>{cat.name}</p>
-                                                <div className='cursor-pointer' onClick={() => handleDeleteSubCategory(ind)}>
-                                                    <IoClose />
-                                                </div>
-
-                                                {/* Shine overlay */}
-                                                <span
-                                                    className="absolute top-0 left-[-50%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/60 to-transparent transform -skew-x-12 pointer-events-none rounded"
-                                                    style={{
-                                                        animation: "shine 2s ease-in-out infinite",
-                                                    }}
-                                                ></span>
-                                                {/* Inline keyframes */}
-                                                <style>
-                                                    {`
-                                                        @keyframes shine {
-                                                            0% { left: -50%; }
-                                                            100% { left: 100%; }
-                                                        }
-                                                    `}
-                                                </style>
-                                            </div>
-
-                                        )
-                                    })
-                                }
+                        <label htmlFor="categorySelect" className={dashboardLabelClass}>Category</label>
+                        <select
+                            id="categorySelect"
+                            className={dashboardSelectClass}
+                            value={selectCategory}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                const category = allCategory.find(cat => cat?._id === value)
+                                if (!category || data.category.some(obj => obj._id === category._id)) return;
+                                setData(prev => ({
+                                    ...prev,
+                                    category: [...prev.category, category]
+                                }))
+                                setSelectCategory('')
+                            }}
+                        >
+                            <option value="">Select category</option>
+                            {allCategory.map((cat) => (
+                                <option key={cat._id} value={cat._id}>{cat.name}</option>
+                            ))}
+                        </select>
+                        {data.category.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-2">
+                                {data.category.map((cat, ind) => (
+                                    <span key={cat._id} className={dashboardTagClass}>
+                                        {cat.name}
+                                        <button type="button" onClick={() => handleDeleteCategory(ind)} className="text-[#666666] hover:text-red-600">
+                                            <IoClose size={14} />
+                                        </button>
+                                    </span>
+                                ))}
                             </div>
-                        </div>
+                        )}
                     </div>
-                    <div className='grid gap-1'>
-                        <label htmlFor="unit">Unit</label>
-                        <input type="text"
-                            placeholder='Enter product unit'
+
+                    <div>
+                        <label htmlFor="subCategorySelect" className={dashboardLabelClass}>Sub category</label>
+                        <select
+                            id="subCategorySelect"
+                            className={dashboardSelectClass}
+                            value={selectSubCategory}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                const subCategorydetails = allSubCategory.find(cat => cat?._id === value)
+                                if (!subCategorydetails) return;
+                                setData(prev => {
+                                    if (prev.subCategory.some(sc => sc._id === subCategorydetails._id)) return prev
+                                    return {
+                                        ...prev,
+                                        subCategory: [...prev.subCategory, subCategorydetails]
+                                    }
+                                })
+                                setSelectSubCategory('')
+                            }}
+                        >
+                            <option value="">Select sub category</option>
+                            {allSubCategory?.map((cat) => (
+                                <option key={cat._id} value={cat._id}>{cat.name}</option>
+                            ))}
+                        </select>
+                        {data.subCategory.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-2">
+                                {data.subCategory.map((cat, ind) => (
+                                    <span key={cat._id} className={dashboardTagClass}>
+                                        {cat.name}
+                                        <button type="button" onClick={() => handleDeleteSubCategory(ind)} className="text-[#666666] hover:text-red-600">
+                                            <IoClose size={14} />
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label htmlFor="unit" className={dashboardLabelClass}>Unit</label>
+                        <input
+                            type="text"
+                            placeholder="Enter product unit"
                             value={data.unit}
-                            name='unit'
-                            id='unit'
+                            name="unit"
+                            id="unit"
                             onChange={handleChange}
                             required
-                            min={1}
-                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
+                            className={dashboardInputClass}
+                        />
                     </div>
-                    <div className='grid gap-1'>
-                        <label htmlFor="stock">Number of Stock</label>
-                        <input type="number"
-                            placeholder='Enter number of stock'
+
+                    <div>
+                        <label htmlFor="stock" className={dashboardLabelClass}>Number of stock</label>
+                        <input
+                            type="number"
+                            placeholder="Enter number of stock"
                             value={data.stock}
-                            name='stock'
-                            id='stock'
+                            name="stock"
+                            id="stock"
                             onChange={handleChange}
                             required
                             min={1}
-                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
+                            className={dashboardInputClass}
+                        />
                     </div>
-                    <div className='grid gap-1'>
-                        <label htmlFor="price">Price</label>
-                        <input type="text"
-                            id='price'
-                            placeholder='Enter product price'
+
+                    <div>
+                        <label htmlFor="price" className={dashboardLabelClass}>Price</label>
+                        <input
+                            type="text"
+                            id="price"
+                            placeholder="Enter product price"
                             value={data.price}
-                            name='price'
+                            name="price"
                             onChange={handleChange}
                             required
                             min={1}
-                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
+                            className={dashboardInputClass}
+                        />
                     </div>
-                    <div className='grid gap-1'>
-                        <label htmlFor="discount">Discount</label>
-                        <input type="text"
-                            placeholder='Enter product discount'
+
+                    <div>
+                        <label htmlFor="discount" className={dashboardLabelClass}>Discount</label>
+                        <input
+                            type="text"
+                            placeholder="Enter product discount"
                             value={data.discount}
-                            name='discount'
-                            id='discount'
+                            name="discount"
+                            id="discount"
                             min={0}
                             onChange={handleChange}
-                           
-                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
+                            className={dashboardInputClass}
+                        />
                     </div>
 
-                    <div>
-                        {
-                            Object.keys(data?.more_details)?.map((k, ind) => {
-                                return (
-                                    <div className='grid gap-1' key={k+ ind + "more_details"}>
-                                        <label htmlFor="k">{k}</label>
-                                        <input type="text"
-                                            
-                                            value={data?.more_details[k]}
+                    {Object.keys(data?.more_details || {}).map((k) => (
+                        <div key={k}>
+                            <label htmlFor={k} className={dashboardLabelClass}>{k}</label>
+                            <input
+                                type="text"
+                                value={data.more_details[k]}
+                                id={k}
+                                onChange={(e) => {
+                                    setData((prev) => ({
+                                        ...prev,
+                                        more_details: {
+                                            ...prev.more_details,
+                                            [k]: e.target.value
+                                        }
+                                    }))
+                                }}
+                                required
+                                className={dashboardInputClass}
+                            />
+                        </div>
+                    ))}
 
-                                            id={k}
-                                            onChange={(e) => {
-                                                setData((prev) => {
-                                                    return {
-                                                        ...prev,
-                                                        more_details: {
-                                                            ...prev.more_details,
-                                                            [k]: e.target.value
-                                                        }
-                                                    }
-                                                })
-                                            }}
-                                            required
-                                            className='bg-slate-100 p-2 outline-none border border-transparent focus-within:border-amber-300 rounded' />
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-
-                    <div onClick={() => setOpenAddFields(true)} className='flex items-center text-sm gap-0.5 font-semibold text-green-600 w-max justify-center  cursor-pointer'>
+                    <button
+                        type="button"
+                        onClick={() => setOpenAddFields(true)}
+                        className={`flex w-fit items-center gap-1 ${dashboardAddBtnClass}`}
+                    >
                         <FaPlus size={12} />
-                        Add Fields
-                    </div>
+                        Add field
+                    </button>
 
-                    <button type='submit' className='bg-amber-400 py-1 px-2 rounded mt-3'>Upload</button>
+                    <button type="submit" className={dashboardPrimaryBtnClass}>
+                        Upload product
+                    </button>
                 </form>
             </div>
-            {
-                viewImageURL && (
 
-                    <OpenImage url={viewImageURL} close={() => setViewImageURL('')} />
-                )
-            }
-            {
-                openAddFields && (
-                    <AddField
-                        close={() => setOpenAddFields(false)}
-                        onChange={(e) => setFieldName(e.target.value)}
-                        onClick={handleAddField}
-                        value={fieldName}
-                    />
-                )
-            }
-        </section>
+            {viewImageURL && (
+                <OpenImage url={viewImageURL} close={() => setViewImageURL('')} />
+            )}
+            {openAddFields && (
+                <AddField
+                    close={() => setOpenAddFields(false)}
+                    onChange={(e) => setFieldName(e.target.value)}
+                    onClick={handleAddField}
+                    value={fieldName}
+                />
+            )}
+        </div>
     )
 }
 

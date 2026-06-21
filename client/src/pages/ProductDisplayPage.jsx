@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import Axios from "../utils/axios";
 import AxiosToastError from '../utils/AxiosToastError.js'
 import SummaryApi from '../common/summaryApi';
-import { FaAngleRight, FaAngleLeft } from "react-icons/fa";
 import { DisplayPriceInRupees } from '../utils/DisplayPriceInRupees.js'
 import image1 from '../assets/Binkeyit Full Stack Ecommerce/minute_delivery.png'
 import image2 from '../assets/Binkeyit Full Stack Ecommerce/Best_Prices_Offers.png'
@@ -11,17 +11,35 @@ import image3 from '../assets/Binkeyit Full Stack Ecommerce/Wide_Assortment.png'
 import { pricewithDiscount } from '../utils/PriceWithDiscount.js'
 import AddToCartButton from '../Components/AddToCartButton.jsx';
 import Loading from '../Components/Loading'
+import SimilarProducts from '../Components/SimilarProducts'
+import validUrl from '../utils/validUrlConvert'
+
+const formatDetailPrice = (price) =>
+  DisplayPriceInRupees(price).replace(/\.00$/, '')
 
 const ProductDisplayPage = () => {
   const [data, setData] = useState({
     name: "",
     image: []
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [image, setImage] = useState(0)
   const params = useParams()
   const imageContainer = useRef()
+  const allCategory = useSelector((state) => state.product.allCategory)
+  const allSubCategory = useSelector((state) => state.product.subCategory)
   let productId = params?.product?.split("-").slice(-1)
+
+  const categoryId = data?.category?.[0]?._id || data?.category?.[0]
+  const subCategoryId = data?.subCategory?.[0]?._id || data?.subCategory?.[0]
+  const category = allCategory.find((item) => item._id === categoryId)
+  const subCategory = allSubCategory.find((item) => item._id === subCategoryId)
+  const salePrice = pricewithDiscount(data.price, data.discount)
+  const hasDiscount = Number(data.discount) > 0
+  const listingPath =
+    category && subCategory
+      ? `/${validUrl(category.name)}-${category._id}/${validUrl(subCategory.name)}-${subCategory._id}`
+      : null
 
   const fetchProductDetails = async () => {
     setLoading(true);
@@ -52,13 +70,14 @@ const ProductDisplayPage = () => {
   }
   useEffect(() => {
     fetchProductDetails();
+    window.scrollTo(0, 0);
   }, [params])
 
   return (
     <> {
 
       loading ? (
-        <Loading />
+        <Loading color="green" size="w-10 h-10" className="min-h-[70vh]" />
       ) : (
         <section className='container mx-auto p-4 grid lg:grid-cols-2 '>
           <div className=' lg:border-r border-slate-200 flex flex-col items-center justify-center'>
@@ -90,30 +109,60 @@ const ProductDisplayPage = () => {
 
             </div>
           </div>
-          <div className='p-4 lg:px-20 py-8 flex flex-col gap-2 '>
-            <p className='bg-green-300 w-fit px-2 rounded-full mb-1 text-xs py-0.5'>10 Min</p>
-            <h2 className='text-lg lg:text-lg font-semibold text-slate-800'>{data.name}</h2>
-            <div className='flex items-center justify-between mt-2'>
-              <div className='flex flex-col gap-1.5'>
-                <p className='text-slate-500 text-xs'>{data.unit}</p>
-                <div className='flex gap-2 items-center'>
-                  <p className='font-bold text-slate-800 text-lg'>{DisplayPriceInRupees(pricewithDiscount(data.price, data.discount))}</p>
-                  <div className='flex gap-1 text-xs  text-slate-500 items-center'>
-                    <p>MRP</p>
-                    <p className=' line-through text-slate-500'>{data.price}</p>
-                  </div>
-                  <p className='bg-blue-500 text-white rounded px-1 text-xs py-0.5'>{data.discount}% off</p>
-                </div>
-              </div>
-              {
-                data.stock === 0 ? (
-                  <p className='text-red-500 text-xs'>Out of Stock</p>
-                ) : (
+          <div className='p-4 lg:px-12 lg:py-8 flex flex-col'>
+            <nav className="mb-4 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-[#666666]">
+              <Link to="/" className="hover:text-[#1c1c1c]">
+                Home
+              </Link>
+              {(subCategory || category) && (
+                <>
+                  <span>/</span>
+                  {listingPath ? (
+                    <Link to={listingPath} className="hover:text-[#1c1c1c]">
+                      {subCategory?.name || category?.name}
+                    </Link>
+                  ) : (
+                    <span>{subCategory?.name || category?.name}</span>
+                  )}
+                </>
+              )}
+              <span>/</span>
+              <span className="text-[#999999] line-clamp-1">{data.name}</span>
+            </nav>
 
-                  <AddToCartButton data={data} />
-                )
-              }
+            <h1 className="text-xl lg:text-[22px] font-bold leading-snug text-[#1c1c1c]">
+              {data.name}
+            </h1>
+            <p className="mt-1 text-sm text-[#666666]">{data.unit}</p>
+
+            <div className="mt-5 flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="text-lg font-bold text-[#1c1c1c]">
+                    {formatDetailPrice(salePrice)}
+                  </span>
+                  {hasDiscount && (
+                    <>
+                      <span className="text-sm text-[#666666]">
+                        MRP{' '}
+                        <span className="line-through">{formatDetailPrice(data.price)}</span>
+                      </span>
+                      <span className="rounded bg-[#3b82d9] px-1.5 py-0.5 text-[10px] font-bold uppercase leading-tight text-white">
+                        {data.discount}% OFF
+                      </span>
+                    </>
+                  )}
+                </div>
+                <p className="mt-1 text-xs text-[#666666]">(Inclusive of all taxes)</p>
+              </div>
+
+              {data.stock === 0 ? (
+                <p className="shrink-0 text-sm font-semibold text-red-500">Out of Stock</p>
+              ) : (
+                <AddToCartButton data={data} detailPage />
+              )}
             </div>
+
             <div className='my-4 grid gap-3'>
               <div>
                 <p className=''>Description</p>
@@ -174,6 +223,14 @@ const ProductDisplayPage = () => {
         </section>
       )
     }
+
+    {!loading && categoryId && (
+      <SimilarProducts
+        categoryId={categoryId}
+        categoryName={category?.name}
+        excludeProductId={data._id}
+      />
+    )}
 
     </>
   )

@@ -3,12 +3,6 @@ import { useSelector } from "react-redux";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaThreads, FaXTwitter } from "react-icons/fa6";
 import validUrl from "../utils/validUrlConvert";
 
-const usefulLinks = [
-  ["Blog", "Privacy", "Terms", "FAQs", "Security", "Contact"],
-  ["Partner", "Franchise", "Seller", "Warehouse", "Deliver", "Resources"],
-  ["Recipes", "Bistro", "District", "Binkeyit Ambulance"],
-];
-
 const splitIntoColumns = (items, columns = 3) => {
   const perColumn = Math.ceil(items.length / columns);
   return Array.from({ length: columns }, (_, index) =>
@@ -54,42 +48,25 @@ function Footer() {
   return (
     <footer className="bg-white border-t border-[#eeeeee]">
       <div className="container mx-auto py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-          <div>
-            <h3 className="font-bold text-[#000000] mb-4">Useful Links</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-0">
-              {usefulLinks.map((column, columnIndex) => (
-                <ul key={columnIndex} className="flex flex-col">
-                  {column.map((link) => (
-                    <li key={link}>
-                      <FooterLink>{link}</FooterLink>
-                    </li>
-                  ))}
-                </ul>
-              ))}
-            </div>
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <h3 className="font-bold text-[#000000]">Categories</h3>
+            <Link to="/" className="font-medium text-[#0C831F] hover:underline">
+              see all
+            </Link>
           </div>
-
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="font-bold text-[#000000]">Categories</h3>
-              <Link to="/" className="font-medium text-[#0C831F] hover:underline">
-                see all
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-0">
-              {categoryColumns.map((column, columnIndex) => (
-                <ul key={columnIndex} className="flex flex-col">
-                  {column.map((category) => (
-                    <li key={category._id}>
-                      <FooterLink onClick={() => handleCategoryClick(category._id, category.name)}>
-                        {category.name}
-                      </FooterLink>
-                    </li>
-                  ))}
-                </ul>
-              ))}
-            </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-0">
+            {categoryColumns.map((column, columnIndex) => (
+              <ul key={columnIndex} className="flex flex-col">
+                {column.map((category) => (
+                  <li key={category._id}>
+                    <FooterLink onClick={() => handleCategoryClick(category._id, category.name)}>
+                      {category.name}
+                    </FooterLink>
+                  </li>
+                ))}
+              </ul>
+            ))}
           </div>
         </div>
       </div>

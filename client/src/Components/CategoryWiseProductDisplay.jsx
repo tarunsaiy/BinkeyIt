@@ -21,7 +21,7 @@ const ScrollButton = ({ direction, onClick, className }) => {
       type="button"
       onClick={onClick}
       aria-label={direction === 'left' ? 'Scroll left' : 'Scroll right'}
-      className={`absolute top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#eeeeee] bg-white text-[#666666] shadow-md transition hover:bg-[#fafafa] ${className}`}
+      className={`absolute top-1/2 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-[#eeeeee] bg-white text-[#666666] shadow-md transition hover:bg-[#fafafa] ${className}`}
     >
       <Icon size={18} />
     </button>
@@ -114,7 +114,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
     return null
   }
 
-  const loadingCardNumber = new Array(6).fill(null)
+  const loadingCardNumber = new Array(7).fill(null)
 
   return (
     <div>
@@ -130,7 +130,7 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
             <ScrollButton
               direction="left"
               onClick={() => scrollProducts(-1)}
-              className="left-1 sm:left-2"
+              className="left-0 -translate-x-full -translate-y-1/2"
             />
           )}
 
@@ -138,12 +138,12 @@ const CategoryWiseProductDisplay = ({ id, name }) => {
             <ScrollButton
               direction="right"
               onClick={() => scrollProducts(1)}
-              className="right-1 sm:right-2"
+              className="right-0 translate-x-full -translate-y-1/2"
             />
           )}
 
           <div
-            className="flex items-stretch gap-2 overflow-x-auto pb-4 thin-scrollbar md:gap-2"
+            className="flex items-stretch gap-2 overflow-x-auto pb-4 no-scrollbar md:gap-2"
             ref={containerRef}
           >
             {loading &&

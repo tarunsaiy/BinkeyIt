@@ -13,6 +13,7 @@ import CardLoading from '../Components/CardLoading'
 import { useNavigate } from 'react-router-dom'
 
 import CategoryWiseProductDisplay from '../Components/CategoryWiseProductDisplay'
+import { PRODUCT_CARD_SCROLL_WIDTH_CLASS } from '../utils/productCardLayout'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -52,8 +53,8 @@ const Home = () => {
 
       {loadingCategory ? (
         <>
-          <div className="container mx-auto my-4 grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-10">
-            {Array.from({ length: 10 }).map((_, index) => (
+          <div className="container mx-auto my-4 grid grid-cols-4 gap-2 sm:grid-cols-5 lg:grid-cols-7">
+            {Array.from({ length: 7 }).map((_, index) => (
               <div
                 key={index}
                 className="aspect-square animate-pulse rounded-lg bg-[#f3f4f6]"
@@ -69,8 +70,10 @@ const Home = () => {
               </div>
               <div className="container mx-auto">
                 <div className="flex items-stretch gap-2 overflow-hidden pb-4">
-                  {Array.from({ length: 6 }).map((_, ind) => (
-                    <CardLoading key={`${section}-${ind}`} />
+                  {Array.from({ length: 7 }).map((_, ind) => (
+                    <div key={`${section}-${ind}`} className={PRODUCT_CARD_SCROLL_WIDTH_CLASS}>
+                      <CardLoading fluid />
+                    </div>
                   ))}
                 </div>
               </div>

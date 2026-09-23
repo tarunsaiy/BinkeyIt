@@ -37,34 +37,36 @@ const CardProduct = ({ data, width, fluid = false }) => {
 
   return (
     <div
-      className={`relative flex flex-col overflow-hidden rounded-xl border border-[#eef0f2] bg-white ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-xl border border-[#eef0f2] bg-white ${
         fluid ? "min-w-0 w-full max-w-none" : "min-w-[148px] max-w-[176px]"
       }`}
       style={width && !fluid ? { width, minWidth: 0, maxWidth: width } : undefined}
     >
       {hasDiscount && <DiscountBadge discount={data.discount} />}
 
-      <div className="flex flex-col p-3">
-      <Link to={url} className="relative mb-2 block aspect-square w-full">
+      <div className="flex min-h-0 flex-1 flex-col p-3">
+      <Link to={url} className="relative mb-2 block aspect-square w-full shrink-0">
         <img
           src={data?.image?.[0]}
           alt={data.name}
-          className="h-full w-full object-contain"
+          className="h-full w-full object-contain object-top"
         />
       </Link>
 
-      <div className="mb-1.5 flex w-fit items-center gap-1 rounded-full bg-[#f3f4f6] px-2 py-0.5">
+      <div className="mb-1.5 flex w-fit shrink-0 items-center gap-1 rounded-full bg-[#f3f4f6] px-2 py-0.5">
         <IoTimeOutline size={11} className="text-gray-600" />
         <span className="text-[9.5px] font-semibold uppercase tracking-wide text-gray-700">
           {deliveryMins} mins
         </span>
       </div>
 
-      <Link to={url} className="mb-0.5 line-clamp-2 text-xs font-semibold leading-4 text-gray-900">
+      <Link to={url} className="mb-0.5 line-clamp-2 min-h-8 shrink-0 text-xs font-semibold leading-4 text-gray-900">
         {data.name}
       </Link>
 
-      <p className="mb-3 text-xs text-gray-500">{data.unit || "1 pc"}</p>
+      <p className="mb-3 line-clamp-1 shrink-0 text-xs text-gray-500">
+        {data.unit || "1 pc"}
+      </p>
 
       <div className="mt-auto flex items-end justify-between gap-2">
         <div className="min-w-0">

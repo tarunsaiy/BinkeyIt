@@ -80,9 +80,9 @@ const ProductDisplayPage = () => {
         <Loading color="green" size="w-10 h-10" className="min-h-[70vh]" />
       ) : (
         <section className='container mx-auto p-4 grid lg:grid-cols-2 '>
-          <div className=' lg:border-r border-slate-200 flex flex-col items-center justify-center'>
+          <div className=' lg:border-r border-slate-200 flex flex-col items-center justify-start'>
             <div className='rounded lg:min-h-[60vh] lg:max-h-[60vh] min-h-56 max-h-56 h-full w-full'>
-              <img src={data.image[image]} alt="product-image" className='w-full h-full object-scale-down' />
+              <img src={data.image[image]} alt="product-image" className='w-full h-full object-scale-down object-top' />
             </div>
             <div className='flex items-center justify-center gap-2 my-4'>
               {
@@ -175,9 +175,9 @@ const ProductDisplayPage = () => {
               {
                 data?.more_details && Object.keys(data?.more_details).map((element, index) => {
                   return (
-                    <div>
-                      <p className='font-semibold'>{element}</p>
-                      <p className='text-base'>{data?.more_details[element]}</p>
+                    <div key={element}>
+                      <p className=''>{element}</p>
+                      <p className='font-medium text-slate-600'>{data?.more_details[element]}</p>
                     </div>
                   )
                 })

@@ -18,8 +18,8 @@ const app = express();
 dotenv.config();
 
 app.use(cors({
-    credentials: true, //allow the frontend to send cookies/auth headers to the backend
-    origin: process.env.FRONTEND_URL
+    origin: true, // Allow requests from any origin
+    credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());

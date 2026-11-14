@@ -34,6 +34,10 @@ const Register = () => {
     if (Object.values(data).some((value) => value.length === 0)) {
       return;
     }
+    if (data.password.length < 7) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
 
     try {
       setLoading(true);

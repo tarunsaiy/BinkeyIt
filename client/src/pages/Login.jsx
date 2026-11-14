@@ -59,7 +59,7 @@ const Login = () => {
       setLoading(true);
       const response = await Axios({
         ...SummaryApi.login,
-        data,
+        data: { ...data, password: data.password.trim() },
       });
 
       if (response.data.error) {

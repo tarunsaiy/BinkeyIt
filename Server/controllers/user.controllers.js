@@ -21,14 +21,6 @@ export async function registerUserController(request, response) {
             })
         }
 
-        if (String(password).length < 7) {
-            return response.status(400).json({
-                message: "Password must be at least 8 characters",
-                error: true,
-                success: false
-            })
-        }
-
         const user = await UserModel.findOne({ email });
         if (user) {
             return response.status(400).json({
@@ -140,7 +132,7 @@ export async function loginController(request, response) {
             });
         }
 
-        const checkPassword = await bcrypt.compare(String(password).trim(), user.password);
+        const checkPassword = await bcrypt.compare(password, user.password);
         if (!checkPassword) {
             return response.status(400).json({
                 message: "Invalid credentials",

@@ -26,8 +26,10 @@ const FieldLabel = ({ htmlFor, children, required = false }) => (
   </label>
 )
 
+let lastSavedForm = {}
+
 const AddAddress = ({ close }) => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm()
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues: lastSavedForm })
   const { fetchAddress } = useGlobalContext()
   const { address: geoAddress } = useGeolocation()
   const user = useSelector((state) => state.user)
@@ -43,6 +45,7 @@ const AddAddress = ({ close }) => {
         area: data.area,
         landmark: data.landmark,
         mobile: data.mobile || user?.mobile,
+        pincode: data.pincode,
       })
 
       const response = await Axios({
@@ -54,6 +57,7 @@ const AddAddress = ({ close }) => {
 
       if (responseData.success) {
         toast.success(responseData.message)
+        lastSavedForm = { flat: data.flat, floor: data.floor, area: data.area, landmark: data.landmark, pincode: data.pincode }
         reset()
         fetchAddress()
         if (close) close()
@@ -157,6 +161,17 @@ const AddAddress = ({ close }) => {
               placeholder="Nearby landmark (optional)"
               className="w-full rounded-xl border border-[#eeeeee] px-3 py-3 text-sm text-[#1c1c1c] outline-none focus:border-[#0C831F]"
               {...register('landmark')}
+            />
+          </div>
+
+          <div className="mb-4">
+            <FieldLabel htmlFor="pincode">PIN code</FieldLabel>
+            <input
+              type="text"
+              id="pincode"
+              placeholder="PIN code"
+              className="w-full rounded-xl border border-[#eeeeee] px-3 py-3 text-sm text-[#1c1c1c] outline-none focus:border-[#0C831F]"
+              {...register('pincode')}
             />
           </div>
 

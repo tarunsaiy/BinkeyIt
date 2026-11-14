@@ -19,6 +19,7 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -48,8 +49,7 @@ const Login = () => {
     setStep(2);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!data.password.trim()) {
       toast.error("Please enter your password");
       return;
@@ -64,6 +64,7 @@ const Login = () => {
 
       if (response.data.error) {
         toast.error(response.data.message);
+        setLoginError(response.data.message);
         return;
       }
 
@@ -77,10 +78,11 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
+      setLoginError(error?.response?.data?.message || "Something went wrong");
       AxiosToastError(error);
-    } finally {
-      setLoading(false);
+      return;
     }
+    setLoading(false);
   };
 
   const canContinue = data.email.trim().length > 0;
@@ -148,7 +150,8 @@ const Login = () => {
             </p>
           </form>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form>
+            <input type="hidden" name="email" value={data.email} />
             <p className="mb-3 text-center text-gray-500">{data.email}</p>
 
             <div className="mb-2 flex items-center overflow-hidden rounded-xl border border-gray-300 focus-within:border-gray-400">
@@ -180,8 +183,12 @@ const Login = () => {
               </Link>
             </div>
 
+            {loginError && (
+              <p className="mb-3 text-sm text-red-500">{loginError}</p>
+            )}
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={!canLogin || loading}
               className={`w-full rounded-xl py-3.5 font-bold text-white transition-colors ${
                 canLogin && !loading

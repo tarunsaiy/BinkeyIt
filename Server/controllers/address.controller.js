@@ -60,14 +60,16 @@ export const updateAddressController = async (request, response) => {
         const userId = request.userId
         const { _id, address_line, city, state, country, pincode, mobile } = request.body
 
-        const updateAddress = await AddressModel.updateOne({ _id: _id, userId: userId }, {
+        const updateAddress = await new AddressModel({
             address_line,
             city,
             state,
             country,
             mobile,
-            pincode
-        })
+            pincode,
+            userId
+        }).save()
+        await UserModel.findByIdAndUpdate(userId, { $push: { address_details: updateAddress._id } })
 
         return response.json({
             message: "Address Updated",

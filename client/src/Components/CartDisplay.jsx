@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useGlobalContext } from '../Provider/GlobalProvider'
 import { useSelector } from 'react-redux'
 import CartOrderSummary from './CartOrderSummary'
-import { formatOrderPrice, getOrderGrandTotal } from '../utils/orderCharges'
+import { HANDLING_CHARGE, formatOrderPrice, getOrderGrandTotal } from '../utils/orderCharges'
 
 const CartDisplay = ({ close }) => {
   const { notDiscountTotalPrice, totalPrice, totalQuantity, openCheckout } = useGlobalContext()
@@ -12,16 +12,11 @@ const CartDisplay = ({ close }) => {
   const user = useSelector((state) => state.user)
   const navigate = useNavigate()
 
-  if (!cartItem.length || !totalQuantity) {
-    return null
-  }
-
-  const grandTotal = getOrderGrandTotal(totalPrice)
+  const grandTotal = getOrderGrandTotal(totalPrice) - HANDLING_CHARGE
 
   const redirectToCheckoutPage = () => {
     if (user?._id) {
       openCheckout()
-      if (close) close()
       return
     }
     navigate('/login')

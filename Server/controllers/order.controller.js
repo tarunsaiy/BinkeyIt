@@ -190,7 +190,7 @@ export async function getOrderDetailsController(request,response){
                 message : "Please provide user id",
             })
         }
-        const orderlist = await OrderModel.find({ userId : userId }).sort({ createdAt : -1 }).populate('delivery_address')
+        const orderlist = await OrderModel.find({ userId : userId }).sort({ createdAt : 1 }).populate('delivery_address')
     
         return response.json({
             message : "order list",

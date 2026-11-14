@@ -7,9 +7,11 @@ import {
 } from 'react-icons/hi'
 import { MdOutlineDeliveryDining } from 'react-icons/md'
 import AddToCartButton from './AddToCartButton'
+import { Link } from 'react-router-dom'
+import validUrl from '../utils/validUrlConvert'
 import { pricewithDiscount } from '../utils/PriceWithDiscount'
 import {
-  DELIVERY_CHARGE,
+  getDeliveryCharge,
   HANDLING_CHARGE,
   formatOrderPrice,
   getOrderGrandTotal,
@@ -41,7 +43,11 @@ const CartOrderSummary = ({
   notDiscountTotalPrice,
   totalPrice,
 }) => {
-  const savings = Math.max(0, notDiscountTotalPrice - totalPrice)
+  const savings = cartItems.reduce(
+    (sum, item) =>
+      sum + (item.productId.price - pricewithDiscount(item.productId.price, item.productId.discount)),
+    0
+  )
   const grandTotal = getOrderGrandTotal(totalPrice)
 
   return (
@@ -66,21 +72,22 @@ const CartOrderSummary = ({
               item.productId.discount
             )
             const originalPrice = item.productId.price
+            const productUrl = `/product/${validUrl(cartItems[0].productId.name)}-${cartItems[0].productId._id}`
 
             return (
               <div key={item._id + 'cartItem'} className="flex items-start gap-3">
-                <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-lg border border-[#eeeeee] p-1">
+                <Link to={productUrl} className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-lg border border-[#eeeeee] p-1">
                   <img
                     src={item.productId.image[0]}
                     alt={item.productId.name}
                     className="h-full w-full object-contain"
                   />
-                </div>
+                </Link>
 
                 <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 text-xs font-semibold leading-snug text-[#1c1c1c]">
+                  <Link to={productUrl} className="line-clamp-2 block text-xs font-semibold leading-snug text-[#1c1c1c]">
                     {item.productId.name}
-                  </p>
+                  </Link>
                   <p className="mt-0.5 text-[10px] text-[#666666]">
                     {item.productId.unit}
                   </p>
@@ -128,7 +135,7 @@ const CartOrderSummary = ({
           icon={MdOutlineDeliveryDining}
           label="Delivery charge"
           showInfo
-          value={formatOrderPrice(DELIVERY_CHARGE)}
+          value={getDeliveryCharge(totalPrice) === 0 ? 'FREE' : formatOrderPrice(getDeliveryCharge(totalPrice))}
         />
 
         <BillLine

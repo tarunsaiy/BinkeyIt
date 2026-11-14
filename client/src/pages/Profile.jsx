@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { FaRegUserCircle } from 'react-icons/fa'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import UserProfileAvatarEdit from '../Components/UserProfileAvatarEdit'
 import SummaryApi from '../common/summaryApi'
 import AxiosToastError from '../utils/AxiosToastError'
 import toast from 'react-hot-toast'
+import fetchUserDetails from '../utils/fetchUserDetails.js'
 import Axios from '../utils/axios'
+import { setUserDetails } from '../Store/userSlice'
 import {
   dashboardInputClass,
   dashboardLabelClass,
@@ -17,6 +19,7 @@ import {
 } from '../utils/dashboardStyles'
 
 const Profile = () => {
+  const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
   const [openProfileAvatarEdit, setOpenProfileAvatarEdit] = useState(false)
   const [userData, setUserData] = useState({
@@ -44,14 +47,6 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!userData.name) {
-      toast.error('Please enter your name')
-      return
-    }
-    if (!/^\d{6,10}$/.test(String(userData.mobile))) {
-      toast.error('Enter a valid 10-digit mobile number')
-      return
-    }
     try {
       setLoading(true)
       const response = await Axios({
@@ -60,6 +55,8 @@ const Profile = () => {
       })
       if (response.data.success) {
         toast.success(response.data.message)
+        const newdata = await fetchUserDetails()
+        dispatch(setUserDetails(newdata.data))
       }
     } catch (error) {
       AxiosToastError(error)

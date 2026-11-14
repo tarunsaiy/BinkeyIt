@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../assets/Binkeyit Full Stack Ecommerce/logo.png";
 import Search from "./Search";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -43,10 +43,16 @@ const Header = () => {
   const user = useSelector((state) => state.user);
   const [openCartSection, setOpenCartSection] = useState(false);
   const { address, loading: locationLoading, refreshLocation } = useGeolocation();
-  const { headerQuantity, headerTotal, syncHeader } = useGlobalContext();
+  const { totalQuantity, totalPrice } = useGlobalContext();
+
+  useEffect(() => {
+    if (!totalQuantity) {
+      setOpenCartSection(false);
+    }
+  }, [totalQuantity]);
 
   const handleOpenCart = () => {
-    syncHeader();
+    if (!totalQuantity) return;
     setOpenCartSection(true);
   };
 
@@ -85,12 +91,12 @@ const Header = () => {
   };
 
   const renderCartButton = () => {
-    if (!headerQuantity) {
+    if (!totalQuantity) {
       return (
         <button
           type="button"
           onClick={handleOpenCart}
-          className="flex items-center gap-2 rounded-lg bg-[#e8e8e8] px-3 py-2 text-xs font-bold text-[#666666] cursor-pointer whitespace-nowrap"
+          className="flex items-center gap-2 rounded-lg bg-[#e8e8e8] px-3 py-2 text-xs font-bold text-[#666666] cursor-default whitespace-nowrap"
           
         >
           <HiOutlineShoppingCart size={20} />
@@ -108,9 +114,9 @@ const Header = () => {
         <HiOutlineShoppingCart size={22} className="shrink-0 text-white" />
         <div className="flex flex-col items-start leading-tight text-white">
           <span className="text-sm font-bold">
-            {headerQuantity} {headerQuantity === 1 ? "item" : "items"}
+            {totalQuantity} {totalQuantity === 1 ? "item" : "items"}
           </span>
-          <span className="text-sm font-bold">{formatCartPrice(headerTotal)}</span>
+          <span className="text-sm font-bold">{formatCartPrice(totalPrice)}</span>
         </div>
       </button>
     );
@@ -168,7 +174,7 @@ const Header = () => {
         <Search />
       </div>
 
-      {openCartSection && (
+      {openCartSection && totalQuantity > 0 && (
         <CartDisplay close={() => setOpenCartSection(false)} />
       )}
     </header>

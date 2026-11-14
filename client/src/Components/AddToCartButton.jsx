@@ -10,10 +10,10 @@ import Loading from '../Components/Loading.jsx'
 import AxiosToastError from '../utils/AxiosToastError'
 import { useGlobalContext } from '../Provider/GlobalProvider'
 import { Navigate, useNavigate } from 'react-router-dom'
-const AddToCartButton = ({ data, outlined = false, compact = false, detailPage = false, ignoreCart = false }) => {
+const AddToCartButton = ({ data, outlined = false, compact = false, detailPage = false }) => {
     const user = useSelector((state) => state.user);
     const navigate = useNavigate()
-    const { fetchCartItem, updateCartItem } = useGlobalContext()
+    const { fetchCartItem, updateCartItem, deleteCartItem } = useGlobalContext()
     const [loading, setLoading] = useState(false)
     const cartItem = useSelector(state => state.cartItem?.cart)
     const [isAvailableCart, setIsAvailableCart] = useState(false)
@@ -55,10 +55,10 @@ const AddToCartButton = ({ data, outlined = false, compact = false, detailPage =
 
     //checking this item in cart or not
     useEffect(() => {
-        const checkingitem = !ignoreCart && cartItem.some(item => item.productId._id === data._id)
+        const checkingitem = cartItem.some(item => item.productId._id === data._id)
         setIsAvailableCart(checkingitem)
         const product = cartItem.find(item => item.productId._id === data._id)
-        setQty(prev => (outlined && prev && product ? prev : product?.quantity))
+        setQty(product?.quantity)
         setCartItemsDetails(product)
     }, [data, cartItem])
 
@@ -67,15 +67,9 @@ const AddToCartButton = ({ data, outlined = false, compact = false, detailPage =
         e.preventDefault()
         e.stopPropagation()
 
-        if (detailPage && data.stock != null && qty >= data.stock) {
-            toast.error(`Only ${data.stock} left`)
-            return
-        }
-
         const response = await updateCartItem(cartItemDetails?._id, qty + 1)
 
         if (response.success) {
-            if (outlined) setQty(qty + 1)
             toast.success("Item added")
         }
     }
@@ -83,10 +77,13 @@ const AddToCartButton = ({ data, outlined = false, compact = false, detailPage =
     const decreaseQty = async (e) => {
         e.preventDefault()
         e.stopPropagation()
-        const response = await updateCartItem(cartItemDetails?._id, qty - 1)
-        if (response.success) {
-            if (outlined) setQty(qty - 1)
-            toast.success("Item remove")
+        if (qty === 1) {
+            deleteCartItem(cartItemDetails?._id)
+        } else {
+            const response = await updateCartItem(cartItemDetails?._id, qty - 1)
+            if (response.success) {
+                toast.success("Item remove")
+            }
         }
     }
     const addButtonClass = detailPage

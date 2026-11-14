@@ -25,7 +25,9 @@ export const groupOrdersByCheckout = (orders) => {
     groups[key].items.push(order)
   })
 
-  return Object.values(groups)
+  return Object.values(groups).sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  )
 }
 
 export const findOrderGroupByKey = (orders, groupKey) => {

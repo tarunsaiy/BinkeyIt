@@ -12,6 +12,17 @@ export const addToCartControler = async (request, response) => {
                 error: true
             })
         }
+        const checkItemInCart = await CartProductModel.findOne({
+            userId: userId,
+            productId: productId
+        })
+        if (checkItemInCart) {
+            return response.status(400).json({
+                message: "Product already in cart",
+                success: false,
+                error: true
+            })
+        }
         const cartProduct = new CartProductModel({
             quantity : 1,
             userId : userId,
@@ -65,7 +76,7 @@ export const updateCartItemQtyController = async(request,response)=>{
         const userId = request.userId 
         const { _id,qty } = request.body
 
-        if(!_id ||  qty === undefined){
+        if(!_id ||  !qty){
             return response.status(400).json({
                 message : "provide _id, qty"
             })

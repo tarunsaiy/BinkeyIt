@@ -78,7 +78,7 @@ const SearchPage = () => {
             {
               data.map((p, index) => {
                 return (
-                  <CardProduct data={p} key={p?._id + "searchProduct" + index} fluid fromSearch />
+                  <CardProduct data={p} key={p?._id + "searchProduct" + index} fluid />
                 )
               })
             }

@@ -29,7 +29,7 @@ const DiscountBadge = ({ discount }) => (
   </div>
 );
 
-const CardProduct = ({ data, width, fluid = false, fromSearch = false }) => {
+const CardProduct = ({ data, width, fluid = false }) => {
   const url = `/product/${validUrl(data.name)}-${data._id}`;
   const hasDiscount = data.discount > 0;
   const deliveryMins = getDeliveryMins(data._id);
@@ -81,12 +81,12 @@ const CardProduct = ({ data, width, fluid = false, fromSearch = false }) => {
         </div>
 
         <div className="shrink-0">
-          {data.stock === 0 && !fromSearch ? (
+          {data.stock === 0 ? (
             <span className="inline-block rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-[11px] font-bold uppercase text-red-600">
               Out
             </span>
           ) : (
-            <AddToCartButton data={data} outlined compact ignoreCart={fromSearch} />
+            <AddToCartButton data={data} outlined compact />
           )}
         </div>
       </div>

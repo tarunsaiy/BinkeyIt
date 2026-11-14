@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Axios from "../utils/axios"
 import SummaryApi from "../common/summaryApi.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,15 +21,10 @@ const GlobalProvider = ({ children }) => {
   const [totalPrice, setTotalPrice] = useState(0)
   const [notDiscountTotalPrice, setNotDiscountTotalPrice] = useState(0)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
-  const [headerQuantity, setHeaderQuantity] = useState(0)
-  const [headerTotal, setHeaderTotal] = useState(0)
-  const prevTotalRef = useRef(0)
-  const holdHeaderRef = useRef(false)
-  const latestRef = useRef({ qty: 0, price: 0 })
 
   const openCheckout = () => setCheckoutOpen(true)
   const closeCheckout = () => setCheckoutOpen(false)
-  const fetchCartItem = async (initial = false) => {
+  const fetchCartItem = async () => {
     try {
       const token = localStorage.getItem("access_token");
     if (!token) return; 
@@ -39,7 +34,6 @@ const GlobalProvider = ({ children }) => {
       const { data: responseData } = response
 
       if (responseData.success) {
-        holdHeaderRef.current = initial
         dispatch(handleAddItemCart(responseData.data))
       }
 
@@ -95,12 +89,6 @@ const GlobalProvider = ({ children }) => {
       return preve + (priceAfterDiscount * curr.quantity)
     }, 0)
     setTotalPrice(tPrice)
-    latestRef.current = { qty: totalQty, price: tPrice }
-    if (!holdHeaderRef.current) {
-      setHeaderQuantity(totalQty)
-      setHeaderTotal(prevTotalRef.current)
-    }
-    prevTotalRef.current = tPrice
 
     const notDiscountPrice = cartItem.reduce((preve, curr) => {
       return preve + (curr?.productId?.price * curr.quantity)
@@ -146,14 +134,8 @@ const GlobalProvider = ({ children }) => {
       }
   }
 
-  const syncHeader = () => {
-    holdHeaderRef.current = false
-    setHeaderQuantity(latestRef.current.qty)
-    setHeaderTotal(latestRef.current.price)
-  }
-
   useEffect(() => {
-    fetchCartItem(true),
+    fetchCartItem(),
     fetchAddress(),
     fetchOrder()
   }, [user])
@@ -165,9 +147,6 @@ const GlobalProvider = ({ children }) => {
       deleteCartItem,
       totalQuantity,
       totalPrice,
-      headerQuantity,
-      headerTotal,
-      syncHeader,
       notDiscountTotalPrice,
       handleLogoutOut,
       fetchAddress,

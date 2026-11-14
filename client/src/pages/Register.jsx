@@ -31,7 +31,8 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (Object.values(data).some((value) => value.length === 0)) {
+    if (data.password !== data.confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -64,7 +65,8 @@ const Register = () => {
     }
   };
 
-  
+  const validValue = Object.values(data).every((value) => value.trim());
+
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center px-4">
       <button
@@ -138,7 +140,7 @@ const Register = () => {
 
           <div className="mb-4 flex items-center overflow-hidden rounded-xl border border-gray-300 focus-within:border-gray-400">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={data.confirmPassword}
               onChange={handleChange}
@@ -157,9 +159,9 @@ const Register = () => {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={!validValue || loading}
             className={`w-full rounded-xl py-3.5 font-bold text-white transition-colors ${
-              !loading
+              validValue && !loading
                 ? "cursor-pointer bg-[#0c831f] hover:bg-[#0a6b19]"
                 : "cursor-not-allowed bg-[#b8b8b8]"
             }`}
@@ -169,7 +171,7 @@ const Register = () => {
 
           <p className="mt-4 text-center text-gray-500">
             Already have an account?{" "}
-            <Link to="/register" className="font-semibold text-[#0c831f] hover:underline">
+            <Link to="/login" className="font-semibold text-[#0c831f] hover:underline">
               Login
             </Link>
           </p>
